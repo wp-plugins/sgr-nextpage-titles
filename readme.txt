@@ -25,6 +25,6 @@ Coming soon.
 
 == Changelog ==
 
-= 0.10 =
+= 0.22 =
 
 * Initial beta release.
