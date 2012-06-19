@@ -1,11 +1,13 @@
 === SGR Nextpage Titles ===
-Contributors: Sergio De Falco aka SGr33n
+Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
-Tags: nextpage, SEO, seo, SGR Nextpage Titles
+Tags: nextpage, subpages, subtitles, pages index, SGR Nextpage Titles, SEO, seo
 Requires at least: 3.0
 Tested up to: 3.4
 Stable tag: 0.22
 License: GPLv2
+
+Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
 
 == Description ==
 
