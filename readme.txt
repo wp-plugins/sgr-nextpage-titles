@@ -17,7 +17,7 @@ SGR Nextpage will show an index, that will link to every subpage found in the po
 = Have SEO friendly url for your subpages =
 Every subpage will have SEO friendly url based on the title.
 
-= Forget about the old `<!--nextpage-->` =
+= Forget about the old `&lt;!--nextpage--&gt` =
 Even if you will not save a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
 
 == Installation ==
