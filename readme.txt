@@ -14,11 +14,14 @@ Make order in your posts. With SGR Nextpage Titles you can have post subpages wi
 SGR Nextpage Titles is a plugin that will make you forget the old `<!--nextpage-->` tag because it allows to add more subpages of a post, giving each subpage a title.
 SGR Nextpage will show an index, that will link to every subpage found in the post, if shortcode is present. It will show also an index on every page, in order to easily navigate between subpages.
 
-= Have SEO friendly url for your subpages =
-Every subpage will have SEO friendly url based on the title.
+= Make order in your posts! =
+Forget about too long posts, infinite height pages, diffculty to found a post section. With SGR Nextpage Titles you can divide every post into different subpages, giving them a title and obtaining an index that will show the summary of the post and will redirect your visitors to the desidered section (subpage) of your post.
 
-= Forget about the old `&lt;!--nextpage--&gt` =
-Even if you will not save a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
+= Have SEO friendly url for your subpages =
+Every subpage will have SEO friendly urls based on the given title, to make also happy Search Engines and spider bots that will navigate through your Blog pages.
+
+= Forget about the old `&lt;!--nextpage--&gt;` =
+Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
 
 == Installation ==
 
@@ -41,6 +44,7 @@ Even if you will not save a title for your `[nextpage]` code, SGR Nextpage Title
 
 = To Do =
 
-* Add links for next and previous subpaget in the footer of paginated posts.
+* Change the html post title in the wordpress head section, adding the subpage title.
+* Add links for next and previous subpages in the footer of paginated posts.
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.
