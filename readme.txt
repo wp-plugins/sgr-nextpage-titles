@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, subpages, subtitles, pages index, SGR Nextpage Titles, SEO, seo
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 0.22
+Stable tag: 0.25
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -38,13 +38,21 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 
 == Changelog ==
 
+= 0.25 =
+
+* New features:
+	* The subpage title is now part of the page title (head & html).
+
+* Enhancements:
+	* Added code to load translations (even if there are no words to translate yet).
+	* A few code enhancements.
+
 = 0.22 =
 
 * Initial beta release.
 
 = To Do =
 
-* Change the html post title in the wordpress head section, adding the subpage title.
 * Add links for next and previous subpages in the footer of paginated posts.
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.

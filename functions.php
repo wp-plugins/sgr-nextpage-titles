@@ -1,16 +1,99 @@
 <?php
 
 /**
+ * Functions running after the plugin activation.
+ */
+function sgrntp_activate() {
+	global $wp_rewrite;
+
+	// Add new rewrite rules
+	add_action( 'generate_rewrite_rules', 'sgrnpt_rewrite_rules' );
+	
+	// Flush rewrite rules
+	$wp_rewrite->flush_rules();
+}
+
+/**
+ * Functions running after the plugin deactivation.
+ */
+function sgrntp_deactivate() {
+	global $wp_rewrite;
+
+	// Reset rewrite rules
+	$wp_rewrite->set_permalink_structure( get_option('permalink_structure') );
+	
+	// Flush rewrite rules
+	$wp_rewrite->flush_rules();
+}
+
+/**
  * Functions running during the plugin intialization.
  */
-function sgrnextpage_plugin_init() {
-
+function sgrnpt_plugin_init() {
 	global $pagenow;
-
-	// Carico gli stili del plugin
+	
+	// Load plugin styles
 	if ( !is_admin() && 'wp-login.php' != $pagenow ) {
 		wp_enqueue_style('sgrnpt', SGRNPT_PLUGIN_URL . SGRNPT_CSS_FOLDER . 'default.css');
 	}
+	
+	// Add filters & actions
+	add_filter( 'query_vars', 'sgrnpt_query_vars' );
+	add_action( 'get_header', 'sgrnpt_get_header' );
+}
+
+/**
+ * Functions running during the wp_head.
+ */
+function sgrnpt_get_header() {
+	global $post, $wp_rewrite;
+
+	$id = (int) $post->ID;
+	$content = $post->post_content;
+	
+	if ( is_single() ) {
+		
+		$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
+		
+		$pages = get_nextpage_shortcode($content);
+		$numpages = count($pages);
+		$index = "";
+		$title = "";
+		$c = 0;
+		
+		if ($numpages) {
+
+			// Look for the first shortcode and save it
+			$next = get_nextpage_shortcode($content, true);
+			if ($next) $content = substr($content, 0, strpos($content, $next));	
+		
+			$index .= '<ul id="sgrnpt-post-' . $post->ID . '" class="sgrnpt-table">';
+			foreach ($pages as $page) {
+				$pagelink = get_pagetitle_link($page['title']);
+				$index .= '<li><a href="' . $pagelink . '">' . $page['title'] . '</a></li>';
+				//$index .= '<li>' . $page['title'] . '</li>';
+				//$index .= '<li>' . get_pagetitle_link($page['title']) . '</li>';
+				if ( sanitize_title($page['title'] ) == $paget) {
+					$content = $page['content'];
+					$title = $page['title'];
+				}
+			}
+			$index .= '</ul>';
+		}
+
+		if ( $title ) $post->post_title = $post->post_title . ": " . $title;
+		$post->post_content = $index . $content;
+	
+	} else {
+
+		// Look for the first shortcode and save it
+		$next = get_nextpage_shortcode($content, true);
+		if ($next) $content = substr($content, 0, strpos($content, $next));	
+		
+		$post->post_content = $content;
+
+		return true;
+	}			
 }
 /**
  * A function to retrieve the subpage title. If it has no title, use a generic one.
@@ -82,61 +165,22 @@ function get_nextpage_shortcode($post, $next = false) {
 /**
  * Register the variables that will be used as parameters on the url.
  */
-function sgrnextpage_query_vars($public_query_vars) {
+function sgrnpt_query_vars($public_query_vars) {
 	$public_query_vars[] = 'paget';
     return $public_query_vars;
 }
 
 /**
- * Manage nextpage shortcodes in the post.
+ * Manage the html title.
  */
-function sgrnextpage_content($content) {
-	
-	global $post, $wp_rewrite;
-	
-	if ( is_single() ) {
-		
-		$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
-
-		$id = (int) $post->ID;
-		$content = $post->post_content;
-		
-		$pages = get_nextpage_shortcode($content);
-		$numpages = count($pages);
-		$index = "";
-		$c = 0;
-		
-		if ($numpages) {
-
-			// Look for the first shortcode and save it
-			$next = get_nextpage_shortcode($content, true);
-			if ($next) $content = substr($content, 0, strpos($content, $next));	
-		
-			$index .= '<ul id="sgrnpt-post-' . $post->ID . '" class="sgrnpt-table">';
-			foreach ($pages as $page) {
-				$pagelink = get_pagetitle_link($page['title']);
-				$index .= '<li><a href="' . $pagelink . '">' . $page['title'] . '</a></li>';
-				//$index .= '<li>' . $page['title'] . '</li>';
-				//$index .= '<li>' . get_pagetitle_link($page['title']) . '</li>';
-				if ( sanitize_title($page['title'] ) == $paget) $content = $page['content'];
-			}
-			$index .= '</ul>';
-		}
-		return $index . $content;
-	} else {
-
-		// Look for the first shortcode and save it
-		$next = get_nextpage_shortcode($content, true);
-		if ($next) $content = substr($content, 0, strpos($content, $next));	
-		
-		return $content;
-	}
+function sgrnpt_wp_title($title) {
+	return $title;
 }
 
 /**
  * Manage the post title.
  */
-function sgrnextpage_title($title) {
+function sgrnpt_title($title) {
 	return $title;
 }
 
@@ -177,7 +221,7 @@ function get_pagetitle_link($pagetitle, $escape = true ) {
 /**
  * Create nextpage rewrite rules.
  */
-function sgrnextpage_rewrite_rules() {
+function sgrnpt_rewrite_rules() {
 	global $wp_rewrite;
 
 	// Define custom rewrite tokens
@@ -199,12 +243,30 @@ function sgrnextpage_rewrite_rules() {
 }
 
 /**
- * A function to flush rewrite rules.
+ * Generate reset rewrite rules.
  */
-function flush_rules() {
+function reset_rewrite_rules() {
 	global $wp_rewrite;
 
-	$wp_rewrite->flush_rules();
+	// Define the default permalink structure
+	$rewrite_keywords_structure = $wp_rewrite->root . get_option('permalink_structure');
 
+	// Generate the rewrite rules
+	$new_rule = $wp_rewrite->generate_rewrite_rules( $rewrite_keywords_structure, false );
+
+	// Add the new rewrite rule into the global rules array
+	$wp_rewrite->rules = $new_rule + $wp_rewrite->rules;
+
+	return $wp_rewrite->rules;
+}
+
+/**
+ * A function to flush rewrite rules.
+ */
+function sgrnpt_flush_rewrite_rules() {
+	global $wp_rewrite;
+
+	// Flush rewrite rules
+	$wp_rewrite->flush_rules();
 	return true;
 }
