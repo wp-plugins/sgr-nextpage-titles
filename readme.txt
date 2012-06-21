@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, subpages, subtitles, pages index, SGR Nextpage Titles, SEO, seo
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 0.25
+Stable tag: 0.30
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -27,8 +27,7 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
 2. Activate the SGR Nextpage titles plugin through the 'Plugins' menu in WordPress
-3. Flush rewrite rules saving again your permalink structure `/wp-admin/options-permalink.php`
-4. Add few `[nextpage title="Pretty title"]` codes to your posts
+3. Add few `[nextpage title="Pretty title"]` codes to your posts
 
 == Screenshots ==
 
@@ -38,7 +37,7 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 
 == Changelog ==
 
-= 0.25 =
+= 0.30 =
 
 * New features:
 	* The subpage title is now part of the page title (head & html).
@@ -46,6 +45,7 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 * Enhancements:
 	* Added code to load translations (even if there are no words to translate yet).
 	* A few code enhancements.
+	* No more needed to flush rewrite rules after activation.
 
 = 0.22 =
 
@@ -56,4 +56,3 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 * Add links for next and previous subpages in the footer of paginated posts.
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.
-* Automatically flush rewrite rules during the installation process.

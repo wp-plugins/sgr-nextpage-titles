@@ -241,32 +241,3 @@ function sgrnpt_rewrite_rules() {
 
 	return $wp_rewrite->rules;
 }
-
-/**
- * Generate reset rewrite rules.
- */
-function reset_rewrite_rules() {
-	global $wp_rewrite;
-
-	// Define the default permalink structure
-	$rewrite_keywords_structure = $wp_rewrite->root . get_option('permalink_structure');
-
-	// Generate the rewrite rules
-	$new_rule = $wp_rewrite->generate_rewrite_rules( $rewrite_keywords_structure, false );
-
-	// Add the new rewrite rule into the global rules array
-	$wp_rewrite->rules = $new_rule + $wp_rewrite->rules;
-
-	return $wp_rewrite->rules;
-}
-
-/**
- * A function to flush rewrite rules.
- */
-function sgrnpt_flush_rewrite_rules() {
-	global $wp_rewrite;
-
-	// Flush rewrite rules
-	$wp_rewrite->flush_rules();
-	return true;
-}
