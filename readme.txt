@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, subpages, subtitles, pages index, SGR Nextpage Titles, SEO, seo
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 0.25
+Stable tag: 0.30
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -37,7 +37,7 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 
 == Changelog ==
 
-= 0.25 =
+= 0.30 =
 
 * New features:
 	* The subpage title is now part of the page title (head & html).
