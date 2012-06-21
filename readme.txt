@@ -11,8 +11,8 @@ Make order in your posts. With SGR Nextpage Titles you can have post subpages wi
 
 == Description ==
 
-SGR Nextpage Titles is a plugin that will make you forget the old `<!--nextpage-->` tag because it allows to add more subpages of a post, giving each subpage a title.
-SGR Nextpage will show an index, that will link to every subpage found in the post, if shortcode is present. It will show also an index on every page, in order to easily navigate between subpages.
+SGR Nextpage Titles is a WordPress plugin that will make you forget the old `<!--nextpage-->` code because it allows to add more subpages of a post, giving each subpage a title.
+Then SGR Nextpage Titles will show an index, that will link to each subpage found in the post, if shortcode is present. It will show on every page, in order to easily navigate between subpages.
 
 = Make order in your posts! =
 Forget about too long posts, infinite height pages, diffculty to found a post section. With SGR Nextpage Titles you can divide every post into different subpages, giving them a title and obtaining an index that will show the summary of the post and will redirect your visitors to the desidered section (subpage) of your post.
@@ -48,3 +48,4 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 * Add links for next and previous subpages in the footer of paginated posts.
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.
+* Automatically flush rewrite rules during the installation process.
