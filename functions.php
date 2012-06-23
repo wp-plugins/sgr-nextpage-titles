@@ -37,6 +37,9 @@ function sgrnpt_plugin_init() {
 		wp_enqueue_style('sgrnpt', SGRNPT_PLUGIN_URL . SGRNPT_CSS_FOLDER . 'default.css');
 	}
 	
+	// Add new rewrite rules
+	add_action( 'generate_rewrite_rules', 'sgrnpt_rewrite_rules' );
+	
 	// Add filters & actions
 	add_filter( 'query_vars', 'sgrnpt_query_vars' );
 	add_action( 'get_header', 'sgrnpt_get_header' );
@@ -47,7 +50,7 @@ function sgrnpt_plugin_init() {
  */
 function sgrnpt_get_header() {
 	global $post, $wp_rewrite;
-
+	
 	$id = (int) $post->ID;
 	$content = $post->post_content;
 	
@@ -58,7 +61,10 @@ function sgrnpt_get_header() {
 		$pages = get_nextpage_shortcode($content);
 		$numpages = count($pages);
 		$index = "";
+		$pagelinks = "";
 		$title = "";
+		$titlenext = "";
+		$titleprev = "";
 		$c = 0;
 		
 		if ($numpages) {
@@ -67,23 +73,59 @@ function sgrnpt_get_header() {
 			$next = get_nextpage_shortcode($content, true);
 			if ($next) $content = substr($content, 0, strpos($content, $next));	
 		
+			// Before the start of the loop
 			$index .= '<ul id="sgrnpt-post-' . $post->ID . '" class="sgrnpt-table">';
+			
 			foreach ($pages as $page) {
+				if ( ( '' == $titlenext ) && !$paget ) $titlenext = $page['title'];
 				$pagelink = get_pagetitle_link($page['title']);
 				$index .= '<li><a href="' . $pagelink . '">' . $page['title'] . '</a></li>';
-				//$index .= '<li>' . $page['title'] . '</li>';
 				//$index .= '<li>' . get_pagetitle_link($page['title']) . '</li>';
-				if ( sanitize_title($page['title'] ) == $paget) {
+				if ( sanitize_title( $page['title'] ) == $paget) {
 					$content = $page['content'];
 					$title = $page['title'];
+				} elseif ( ( '' == $title ) && ( '' != $paget ) ) {
+					$titleprev = $page['title'];
+				} elseif ( ( '' != $title ) && ( '' == $titlenext ) ) {
+					$titlenext = $page['title'];
 				}
 			}
+			
+			// After the end of the loop
 			$index .= '</ul>';
+						
+			$pagelinks .= '<div class="page-link">';
+			
+			if ( $paget && !$titleprev ) {
+				$titleprev = __( 'Back to summary', 'sgr-nextpage-titles' );
+				$pagelinkprev = get_permalink( $post->ID );
+			} else {
+				$pagelinkprev = get_pagetitle_link( sanitize_title( $titleprev ) );
+			}
+
+			// If there is a next page
+			if ( '' != $titlenext ){
+					
+				$pagelinknext = get_pagetitle_link( sanitize_title( $titlenext ) );
+				$pagelinks .= '<a href="' . $pagelinknext . '" class="linknext">' . $titlenext . ' &raquo;</a>';
+			}
+
+			// If there is a prev page
+			if ( '' != $titleprev ) {
+
+				$pagelinks .= '<a href="' . $pagelinkprev . '" class="linkprev">&laquo; ' . $titleprev . '</a>';
+			} else {
+				
+				$pagelinks .= '<div class="linknext">&nbsp;</div>';
+			}
+
+			$pagelinks .= '</div>';
 		}
 
 		if ( $title ) $post->post_title = $post->post_title . ": " . $title;
-		$post->post_content = $index . $content;
-	
+		$post->post_content = $index . $content . $pagelinks;
+		
+		return true;
 	} else {
 
 		// Look for the first shortcode and save it
@@ -91,9 +133,8 @@ function sgrnpt_get_header() {
 		if ($next) $content = substr($content, 0, strpos($content, $next));	
 		
 		$post->post_content = $content;
-
 		return true;
-	}			
+	}
 }
 /**
  * A function to retrieve the subpage title. If it has no title, use a generic one.
@@ -134,8 +175,6 @@ function get_nextpage_shortcode($post, $next = false) {
 	
 	// Variables declaration
 	$pattern = "/\[nextpage[^\]]*\]/";
-	$nexttitle = "";
-	$prevtitle = "";
 	$p = 0;
 	
 	// Returns the next shortcode
@@ -154,9 +193,7 @@ function get_nextpage_shortcode($post, $next = false) {
 			$page['number'] = $p;
 			$page['title'] = $title;
 			$page['content'] = get_nextpage_content($match, $post, $p);
-			$page['previous_title'] = $prevtitle;
 			$pages[] = $page;
-			$prevtitle = $title;
 		}
 		return $pages;	
 	}
@@ -166,22 +203,11 @@ function get_nextpage_shortcode($post, $next = false) {
  * Register the variables that will be used as parameters on the url.
  */
 function sgrnpt_query_vars($public_query_vars) {
+
+	// Setting the variable int the array
 	$public_query_vars[] = 'paget';
+
     return $public_query_vars;
-}
-
-/**
- * Manage the html title.
- */
-function sgrnpt_wp_title($title) {
-	return $title;
-}
-
-/**
- * Manage the post title.
- */
-function sgrnpt_title($title) {
-	return $title;
 }
 
 /**
@@ -194,7 +220,7 @@ function get_pagetitle_link($pagetitle, $escape = true ) {
 
 	if ( !$wp_rewrite->using_permalinks() || is_admin() ) {
 		
-		$base = trailingslashit( get_bloginfo( 'url' ) );
+		$base = get_bloginfo( 'url' );
 		
 		if ( $pagetitle ) {
 			$result = add_query_arg( 'paget', sanitize_title($pagetitle), $base . $request );
@@ -216,6 +242,14 @@ function get_pagetitle_link($pagetitle, $escape = true ) {
 		return esc_url( $result );
 	else
 		return esc_url_raw( $result );
+}
+
+function get_nextpage_prev_link() {
+	global $post;
+}
+
+function get_nextpage_next_link() {
+	global $post;
 }
 
 /**

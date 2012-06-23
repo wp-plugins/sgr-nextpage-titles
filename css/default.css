@@ -34,5 +34,17 @@ ul.sgrnpt-table a:hover {
 	background: #ffffe0;
 	border-top: 1px solid #ffff9d;
 	text-decoration: none;
-	
+}
+.page-link a.linkprev,
+.page-link a.linknext {
+	width: 40%;
+	display: block;
+}
+.page-link a {
+	margin: 0;
+	padding: 0 1.625em;
+}
+.page-link a.linknext {
+	float: right;
+	text-align: right;
 }
