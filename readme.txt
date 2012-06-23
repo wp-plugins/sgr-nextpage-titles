@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 0.25
+Stable tag: 0.38
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -27,7 +27,6 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
 2. Activate the SGR Nextpage titles plugin through the 'Plugins' menu in WordPress
-3. Flush rewrite rules saving again your permalink structure `/wp-admin/options-permalink.php`
 4. Add few `[nextpage title="Pretty title"]` codes to your posts
 
 = Styling =
@@ -41,10 +40,10 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 
 == Changelog ==
 
-= 0.35 =
+= 0.38 =
 
 * New features:
-	* Added links to the bottom.
+	* Added previous/next page links to the bottom.
 	* Added language files support and the italian translation.
 
 = 0.30 =
