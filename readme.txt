@@ -41,13 +41,11 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 == Changelog ==
 
 = 0.38 =
-
 * New features:
 	* Added previous/next page links to the bottom.
 	* Added language files support and the italian translation.
 
 = 0.30 =
-
 * New features:
 	* The subpage title is now part of the page title (head & html).
 
@@ -57,11 +55,9 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 	* No more needed to flush rewrite rules after activation.
 
 = 0.22 =
-
 * Initial beta release.
 
 = To Do =
-
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.
 * Correct the notices returning on empty home page.
