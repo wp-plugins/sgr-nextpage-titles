@@ -1,10 +1,10 @@
 === SGR Nextpage Titles ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
-Tags: nextpage, subpages, subtitles, pages index, SGR Nextpage Titles, SEO, seo
+Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 0.30
+Stable tag: 0.25
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -21,13 +21,17 @@ Forget about too long posts, infinite height pages, diffculty to found a post se
 Every subpage will have SEO friendly urls based on the given title, to make also happy Search Engines and spider bots that will navigate through your Blog pages.
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
-Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
+Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
 
 == Installation ==
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
 2. Activate the SGR Nextpage titles plugin through the 'Plugins' menu in WordPress
-3. Add few `[nextpage title="Pretty title"]` codes to your posts
+3. Flush rewrite rules saving again your permalink structure `/wp-admin/options-permalink.php`
+4. Add few `[nextpage title="Pretty title"]` codes to your posts
+
+= Styling =
+The bottom links have the same class of standard nextpage numbers link. If you want to style them, the links have two classes: `prevlink` and `nextlink`.
 
 == Screenshots ==
 
@@ -36,6 +40,12 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 3. The second subpage of the sample page.
 
 == Changelog ==
+
+= 0.35 =
+
+* New features:
+	* Added links to the bottom.
+	* Added language files support and the italian translation.
 
 = 0.30 =
 
@@ -53,6 +63,9 @@ Even if you will not specify a title for your `[nextpage]` code, SGR Nextpage Ti
 
 = To Do =
 
-* Add links for next and previous subpages in the footer of paginated posts.
 * Make you possible to disable the index or even to show it just on the first page.
 * Add a sidebar widget to show the index.
+* Correct the notices returning on empty home page.
+* Make possible to use links on preview page.
+* Fix links in preview mode.
+* Rewrite quite the whole code using page numbers to retrive the part of the post, not titles.
