@@ -7,7 +7,7 @@ function sgrntp_activate() {
 	global $wp_rewrite;
 
 	// Add new rewrite rules
-	add_action( 'generate_rewrite_rules', 'sgrnpt_rewrite_rules' );
+	add_action( 'generate_rewrite_rules', 'nextpage_rewrite_rules' );
 	
 	// Flush rewrite rules
 	$wp_rewrite->flush_rules();
@@ -38,104 +38,197 @@ function sgrnpt_plugin_init() {
 	}
 	
 	// Add new rewrite rules
-	add_action( 'generate_rewrite_rules', 'sgrnpt_rewrite_rules' );
+	add_action( 'generate_rewrite_rules', 'nextpage_rewrite_rules' );
 	
 	// Add filters & actions
-	add_filter( 'query_vars', 'sgrnpt_query_vars' );
-	add_action( 'get_header', 'sgrnpt_get_header' );
+	add_filter( 'query_vars', 'nextpage_query_vars' );
+	add_action( 'get_header', 'nextpage_get_header' );
 }
 
 /**
- * Functions running during the wp_head.
+ * Functions running during get_header.
  */
-function sgrnpt_get_header() {
-	global $post, $wp_rewrite;
-	
+function nextpage_get_header() {
+	global $post;
+
 	$id = (int) $post->ID;
 	$content = $post->post_content;
 	
 	if ( is_single() ) {
 		
 		$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
-		
-		$pages = get_nextpage_shortcode($content);
-		$numpages = count($pages);
-		$index = "";
-		$pagelinks = "";
-		$title = "";
-		$titlenext = "";
-		$titleprev = "";
-		$c = 0;
-		
-		if ($numpages) {
+		$pages = get_nextpage_shortcodes();
 
-			// Look for the first shortcode and save it
-			$next = get_nextpage_shortcode($content, true);
-			if ($next) $content = substr($content, 0, strpos($content, $next));	
-		
-			// Before the start of the loop
-			$index .= '<ul id="sgrnpt-post-' . $post->ID . '" class="sgrnpt-table">';
-			
-			foreach ($pages as $page) {
-				if ( ( '' == $titlenext ) && !$paget ) $titlenext = $page['title'];
-				$pagelink = get_pagetitle_link($page['title']);
-				$index .= '<li><a href="' . $pagelink . '">' . $page['title'] . '</a></li>';
-				//$index .= '<li>' . get_pagetitle_link($page['title']) . '</li>';
-				if ( sanitize_title( $page['title'] ) == $paget) {
-					$content = $page['content'];
-					$title = $page['title'];
-				} elseif ( ( '' == $title ) && ( '' != $paget ) ) {
-					$titleprev = $page['title'];
-				} elseif ( ( '' != $title ) && ( '' == $titlenext ) ) {
-					$titlenext = $page['title'];
-				}
-			}
-			
-			// After the end of the loop
-			$index .= '</ul>';
+		if ( $pages ) {
+
+			$pagesnum = get_nextpage_count();
+			$pagenum = $pagesnum['current'];
+			$numpages = $pagesnum['count'];
+			$index = get_nextpage_summary();
+			$pagelinks = get_nextpage_pagelinks();
 						
-			$pagelinks .= '<div class="page-link">';
-			
-			if ( $paget && !$titleprev ) {
-				$titleprev = __( 'Back to summary', 'sgr-nextpage-titles' );
-				$pagelinkprev = get_permalink( $post->ID );
-			} else {
-				$pagelinkprev = get_pagetitle_link( sanitize_title( $titleprev ) );
-			}
-
-			// If there is a next page
-			if ( '' != $titlenext ){
-					
-				$pagelinknext = get_pagetitle_link( sanitize_title( $titlenext ) );
-				$pagelinks .= '<a href="' . $pagelinknext . '" class="linknext">' . $titlenext . ' &raquo;</a>';
-			}
-
-			// If there is a prev page
-			if ( '' != $titleprev ) {
-
-				$pagelinks .= '<a href="' . $pagelinkprev . '" class="linkprev">&laquo; ' . $titleprev . '</a>';
-			} else {
-				
-				$pagelinks .= '<div class="linknext">&nbsp;</div>';
-			}
-
-			$pagelinks .= '</div>';
+			$post->post_content = $index . $pages[$pagenum]['content'] . $pagelinks;
+			if ( $pagenum > 0 ) $post->post_title = $post->post_title . ": " . $pages[$pagenum]['title'];
 		}
-
-		if ( $title ) $post->post_title = $post->post_title . ": " . $title;
-		$post->post_content = $index . $content . $pagelinks;
-		
-		return true;
-	} else {
-
-		// Look for the first shortcode and save it
-		$next = get_nextpage_shortcode($content, true);
-		if ($next) $content = substr($content, 0, strpos($content, $next));	
-		
-		$post->post_content = $content;
-		return true;
 	}
+	return false;
 }
+
+/**
+ * Function to show the post summary.
+ */
+function get_nextpage_summary() {
+
+	global $post;
+
+	$pages = get_nextpage_shortcodes();
+	$index = '';
+
+	// Before the start of the loop
+	$index .= '<ul id="sgrnpt-post-' . $post->ID . '" class="sgrnpt-table">';
+	
+	foreach ($pages as $page) {
+		$index .= '<li><a href="' . $page['link'] . '">' . $page['title'] . '</a></li>';		
+	}
+	
+	// After the end of the loop
+	$index .= '</ul>';
+	
+	return $index;
+}
+
+/**
+ * Function to show bottom pagelinks.
+ */
+function get_nextpage_pagelinks() {
+	
+	$pageprev = get_nextpage_prev();
+	$pagenext = get_nextpage_next();
+	$pagelinknext = $pagenext['link'];
+	$pagelinkprev = $pageprev['link'];
+	$pagetitlenext = $pagenext['title'];
+	$pagetitleprev = $pageprev['title'];
+	$pagelinks = '';
+
+	$pagelinks .= '<div class="page-link">';
+	if ( $pagenext ) $pagelinks .= '<a href="' . $pagelinknext . '" class="linknext">' . $pagetitlenext . ' &raquo;</a>';
+	if ( $pageprev ) {
+		$pagelinks .= '<a href="' . $pagelinkprev . '" class="linkprev">&laquo; ' . $pagetitleprev . '</a>';
+	} else {
+		$pagelinks .= '<div class="linkprev">&nbsp;</div>';
+	}
+	$pagelinks .= '</div>';
+
+	return $pagelinks;
+}
+
+/**
+ * Function returning a 2 values array => 'count' = page count, 'current' = current page number
+ */
+function get_nextpage_count() {
+	
+	$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
+	$pages = get_nextpage_shortcodes();
+	$count = count($pages);
+	
+	if ( !$paget ) {
+		$numbers = array( 'count' => $count, 'current' => 0 );
+		return $numbers;
+	} else {
+		foreach ($pages as $page) {
+			if ( sanitize_title($page['title']) == $paget ) return array( 'count' => $count, 'current' => $page['number'] );
+		}
+	}
+	return false;
+}
+
+/**
+ * Check for nextpage shortcodes.
+ */
+function get_nextpage_shortcodes() {
+	global $post;
+
+	$content = $post->post_content;
+	
+	// Variables declaration
+	$pattern = "/\[nextpage[^\]]*\]/";
+	$pages = array();
+	$p = 0;
+	
+	// Get first part of the post
+	$next = get_nextpage_next_shortcode($content);
+	$pos = strpos($content, $next);
+	
+	// Se il post non inizia con uno shortcode aggiungo il sommario alle pagine
+	if ( $pos > 0 ) {
+		$page['number'] = 0;
+		$page['title'] = __( 'Summary', 'sgr-nextpage-titles' );
+		$page['content'] = substr($content, 0, $pos);
+		$page['link'] = get_permalink($post->ID);
+		$pages[] = $page;
+	}
+	
+	preg_match_all($pattern, $content, $matches);
+	foreach ($matches[0] as $match) {
+		$p++;
+		$title = get_nextpage_title($match, $p);
+		$page['number'] = $p;
+		$page['title'] = $title;
+		$page['link'] = get_pagetitle_link($title);
+		$page['content'] = get_nextpage_content($match, $content, $p);
+		$pages[] = $page;
+	}
+	return $pages;	
+}
+
+/**
+ * Check for the next nextpage shortcode.
+ */
+function get_nextpage_next_shortcode($post, $pos = 0) {
+
+	// Variables declaration
+	$pattern = "/\[nextpage[^\]]*\]/";
+	$p = 0;
+	
+	preg_match($pattern, $post, $matches);
+	if ( array_key_exists( 0, $matches ) ) {
+		return $matches[0];
+	}
+	return false;
+}
+
+function get_nextpage_prev() {
+	$pagesnum = get_nextpage_count();
+
+	if ( $pagesnum['current'] > 0 ) {
+		$prevpagenum = $pagesnum['current'] -1;
+	} else {
+		return false;
+	}
+	$pages = get_nextpage_shortcodes();
+	$prevpage = array(
+		'title' => $pages[$prevpagenum]['title'],
+		'link' => $pages[$prevpagenum]['link']
+	);
+	return $prevpage;
+}
+
+function get_nextpage_next() {
+	$pagesnum = get_nextpage_count();
+
+	if ( $pagesnum['count'] > 0 && $pagesnum['current'] != $pagesnum['count'] -1 ) {
+		$nextpagenum = $pagesnum['current'] +1;
+	} else {
+		return false;
+	}
+	$pages = get_nextpage_shortcodes();
+	$nextpage = array(
+		'title' => $pages[$nextpagenum]['title'],
+		'link' => $pages[$nextpagenum]['link']
+	);
+	return $nextpage;
+}
+
 /**
  * A function to retrieve the subpage title. If it has no title, use a generic one.
  */
@@ -156,7 +249,7 @@ function get_nextpage_content($code, $post, $pagen) {
 	$pos = strpos($post, $code);
 	$len = strlen($code);
 	$part = substr($post, $pos+$len);
-	$next = get_nextpage_shortcode($part, true);
+	$next = get_nextpage_next_shortcode($part);
 	
 	// Look for the next shortcode
 	if ($next) {
@@ -169,40 +262,9 @@ function get_nextpage_content($code, $post, $pagen) {
 }
 
 /**
- * Check for nextpage shortcodes.
- */
-function get_nextpage_shortcode($post, $next = false) {
-	
-	// Variables declaration
-	$pattern = "/\[nextpage[^\]]*\]/";
-	$p = 0;
-	
-	// Returns the next shortcode
-	if ( $next == true ) {
-	
-		preg_match($pattern, $post, $matches);
-		if ( array_key_exists( 0, $matches ) )  return $matches[0];
-	
-	// Returns all shortcodes
-	} else {
-	
-		preg_match_all($pattern, $post, $matches);
-		foreach ($matches[0] as $match) {
-			$p++;
-			$title = get_nextpage_title($match, $p);
-			$page['number'] = $p;
-			$page['title'] = $title;
-			$page['content'] = get_nextpage_content($match, $post, $p);
-			$pages[] = $page;
-		}
-		return $pages;	
-	}
-}
-
-/**
  * Register the variables that will be used as parameters on the url.
  */
-function sgrnpt_query_vars($public_query_vars) {
+function nextpage_query_vars($public_query_vars) {
 
 	// Setting the variable int the array
 	$public_query_vars[] = 'paget';
@@ -244,18 +306,10 @@ function get_pagetitle_link($pagetitle, $escape = true ) {
 		return esc_url_raw( $result );
 }
 
-function get_nextpage_prev_link() {
-	global $post;
-}
-
-function get_nextpage_next_link() {
-	global $post;
-}
-
 /**
  * Create nextpage rewrite rules.
  */
-function sgrnpt_rewrite_rules() {
+function nextpage_rewrite_rules() {
 	global $wp_rewrite;
 
 	// Define custom rewrite tokens
