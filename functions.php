@@ -39,36 +39,90 @@ function sgrnpt_plugin_init() {
 	
 	// Add new rewrite rules
 	add_action( 'generate_rewrite_rules', 'nextpage_rewrite_rules' );
-	
+
 	// Add filters & actions
 	add_filter( 'query_vars', 'nextpage_query_vars' );
-	add_action( 'get_header', 'nextpage_get_header' );
+	add_action( 'wp', 'nextpage_wp' );
+	add_action( 'wp_head', 'nextpage_wp_head', 9 );
+}
+
+/**
+ * Functions running during wp_head.
+ */
+function nextpage_wp_head() {
+
+	// Return prev & next link rel
+	nextpage_prev_rel_link(); 
+	nextpage_next_rel_link(); 
+	return;
+}
+
+/**
+ * Functions that returns prev link rel if prevpage exist.
+ */
+function nextpage_prev_rel_link() {
+	global $paget;
+
+	$prevpagelink = $paget['prevpage']['link'];
+	if ( '' != $prevpagelink ) echo "<link rel=\"prev\" href=\"$prevpagelink\" />\n";
+	return;
+}
+
+/**
+ * Functions that returns next link rel if nextpage exist.
+ */
+function nextpage_next_rel_link() {
+	global $paget;
+	
+	$nextpagelink = $paget['nextpage']['link'];
+	if ( '' != $nextpagelink ) echo "<link rel=\"next\" href=\"$nextpagelink\" />\n";
+	return;
+}
+
+/**
+ * Functions that returns 404 page.
+ */
+function nextpage_return_404() {
+	global $wp_query;
+
+	$wp_query->is_404 = true;
+	return false;
 }
 
 /**
  * Functions running during get_header.
  */
-function nextpage_get_header() {
+function nextpage_wp() {
 	global $post, $paget;
 
 	$id = (int) $post->ID;
 	$content = $post->post_content;
-	
+
 	if ( is_single() ) {
 		
 		$paget = get_nextpage_count();
-		$pagereq = (get_query_var('paget')) ? get_query_var('paget') : '';
-		$pages = get_nextpage_shortcodes();
+		
+		// This happen when 404
+		if ( $paget ) {
+		
+			$pagereq = (get_query_var('paget')) ? get_query_var('paget') : '';
+			$pages = get_nextpage_shortcodes();
+			$paget['nextpage'] = get_nextpage_next();
+			$paget['prevpage'] = get_nextpage_prev();
 
-		if ( $pages ) {
+			if ( $pages && is_array( $paget ) ) {
 
-			$pagenum = $paget['current'];
-			$numpages = $paget['count'];
-			$index = get_nextpage_summary();
-			$pagelinks = get_nextpage_pagelinks();
-						
-			$post->post_content = $index . $pages[$pagenum]['content'] . $pagelinks;
-			if ( $pagenum > 0 ) $post->post_title = $post->post_title . ": " . $pages[$pagenum]['title'];
+				$pagenum = $paget['current'];
+				$numpages = $paget['count'];
+				$index = get_nextpage_summary();
+				$pagelinks = get_nextpage_pagelinks();
+							
+				if ( is_numeric( $pagenum ) ) $post->post_content = $index . $pages[$pagenum]['content'] . $pagelinks;
+				if ( $pagenum > 0 ) $post->post_title = $post->post_title . ": " . $pages[$pagenum]['title'];
+			}
+		} else {
+			// Variable title not found, so show 404
+			add_action( 'template_redirect', 'nextpage_return_404' );
 		}
 	}
 	return false;
@@ -135,7 +189,7 @@ function get_nextpage_count() {
 			if ( sanitize_title($page['title']) == $pagereq ) return array( 'count' => $count, 'current' => $page['number'] );
 		}
 	}
-	return false;
+	return;
 }
 
 /**

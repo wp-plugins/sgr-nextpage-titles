@@ -40,9 +40,12 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 = 0.40 =
 * New features:
 	* The summary is now linked as a page.
+	* Added next & prev link rel to the head.
 * Enhancements:
 	* Rewrite the code to request parts via pagenumber.
 	* Made changes to bottom link style.
+* Bug fix:
+	* Uncorrect pagetitle now returns 404.
 
 = 0.38 =
 * New features:
