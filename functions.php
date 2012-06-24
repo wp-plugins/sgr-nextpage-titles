@@ -49,21 +49,21 @@ function sgrnpt_plugin_init() {
  * Functions running during get_header.
  */
 function nextpage_get_header() {
-	global $post;
+	global $post, $paget;
 
 	$id = (int) $post->ID;
 	$content = $post->post_content;
 	
 	if ( is_single() ) {
 		
-		$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
+		$paget = get_nextpage_count();
+		$pagereq = (get_query_var('paget')) ? get_query_var('paget') : '';
 		$pages = get_nextpage_shortcodes();
 
 		if ( $pages ) {
 
-			$pagesnum = get_nextpage_count();
-			$pagenum = $pagesnum['current'];
-			$numpages = $pagesnum['count'];
+			$pagenum = $paget['current'];
+			$numpages = $paget['count'];
 			$index = get_nextpage_summary();
 			$pagelinks = get_nextpage_pagelinks();
 						
@@ -110,13 +110,9 @@ function get_nextpage_pagelinks() {
 	$pagetitleprev = $pageprev['title'];
 	$pagelinks = '';
 
-	$pagelinks .= '<div class="page-link">';
+	$pagelinks .= '<div class="paget-link">';
+	if ( $pageprev ) $pagelinks .= '<a href="' . $pagelinkprev . '" class="linkprev">&laquo; ' . $pagetitleprev . '</a>';
 	if ( $pagenext ) $pagelinks .= '<a href="' . $pagelinknext . '" class="linknext">' . $pagetitlenext . ' &raquo;</a>';
-	if ( $pageprev ) {
-		$pagelinks .= '<a href="' . $pagelinkprev . '" class="linkprev">&laquo; ' . $pagetitleprev . '</a>';
-	} else {
-		$pagelinks .= '<div class="linkprev">&nbsp;</div>';
-	}
 	$pagelinks .= '</div>';
 
 	return $pagelinks;
@@ -127,16 +123,16 @@ function get_nextpage_pagelinks() {
  */
 function get_nextpage_count() {
 	
-	$paget = (get_query_var('paget')) ? get_query_var('paget') : '';
+	$pagereq = (get_query_var('paget')) ? get_query_var('paget') : '';
 	$pages = get_nextpage_shortcodes();
 	$count = count($pages);
 	
-	if ( !$paget ) {
+	if ( !$pagereq ) {
 		$numbers = array( 'count' => $count, 'current' => 0 );
 		return $numbers;
 	} else {
 		foreach ($pages as $page) {
-			if ( sanitize_title($page['title']) == $paget ) return array( 'count' => $count, 'current' => $page['number'] );
+			if ( sanitize_title($page['title']) == $pagereq ) return array( 'count' => $count, 'current' => $page['number'] );
 		}
 	}
 	return false;
@@ -201,10 +197,10 @@ function get_nextpage_next_shortcode($post, $pos = 0) {
  * Return an array with previous page link and title, return false if no previous page.
  */
 function get_nextpage_prev() {
-	$pagesnum = get_nextpage_count();
+	global $paget;
 
-	if ( $pagesnum['current'] > 0 ) {
-		$prevpagenum = $pagesnum['current'] -1;
+	if ( $paget['current'] > 0 ) {
+		$prevpagenum = $paget['current'] -1;
 	} else {
 		return false;
 	}
@@ -220,10 +216,10 @@ function get_nextpage_prev() {
  * Return an array with next page link and title, return false if no next page.
  */
 function get_nextpage_next() {
-	$pagesnum = get_nextpage_count();
+	global $paget;
 
-	if ( $pagesnum['count'] > 0 && $pagesnum['current'] != $pagesnum['count'] -1 ) {
-		$nextpagenum = $pagesnum['current'] +1;
+	if ( $paget['count'] > 0 && $paget['current'] != $paget['count'] -1 ) {
+		$nextpagenum = $paget['current'] +1;
 	} else {
 		return false;
 	}

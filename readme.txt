@@ -29,9 +29,6 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 2. Activate the SGR Nextpage Titles Plugin through the 'Plugins' menu in WordPress
 4. Add few `[nextpage title="Pretty title"]` codes to your posts
 
-= Styling =
-The bottom links have the same class of standard nextpage numbers link. If you want to style them, the links have two classes: `prevlink` and `nextlink`.
-
 == Screenshots ==
 
 1. Here you can see how to use SGR Nextpage Titles shortcodes. It's very simple.
@@ -45,6 +42,7 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 	* The summary is now linked as a page.
 * Enhancements:
 	* Rewrite the code to request parts via pagenumber.
+	* Made changes to bottom link style.
 
 = 0.38 =
 * New features:
