@@ -26,7 +26,7 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 == Installation ==
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
-2. Activate the SGR Nextpage titles plugin through the 'Plugins' menu in WordPress
+2. Activate the SGR Nextpage Titles Plugin through the 'Plugins' menu in WordPress
 4. Add few `[nextpage title="Pretty title"]` codes to your posts
 
 = Styling =
@@ -40,6 +40,12 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 
 == Changelog ==
 
+= 0.40 =
+* New features:
+	* The summary is now linked as a page.
+* Enhancements:
+	* Rewrite the code to request parts via pagenumber.
+
 = 0.38 =
 * New features:
 	* Added previous/next page links to the bottom.
@@ -48,7 +54,6 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 = 0.30 =
 * New features:
 	* The subpage title is now part of the page title (head & html).
-
 * Enhancements:
 	* Added code to load translations (even if there are no words to translate yet).
 	* A few code enhancements.
@@ -59,8 +64,5 @@ The bottom links have the same class of standard nextpage numbers link. If you w
 
 = To Do =
 * Make you possible to disable the index or even to show it just on the first page.
-* Add a sidebar widget to show the index.
 * Correct the notices returning on empty home page.
-* Make possible to use links on preview page.
 * Fix links in preview mode.
-* Rewrite quite the whole code using page numbers to retrive the part of the post, not titles.

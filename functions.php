@@ -197,6 +197,9 @@ function get_nextpage_next_shortcode($post, $pos = 0) {
 	return false;
 }
 
+/**
+ * Return an array with previous page link and title, return false if no previous page.
+ */
 function get_nextpage_prev() {
 	$pagesnum = get_nextpage_count();
 
@@ -213,6 +216,9 @@ function get_nextpage_prev() {
 	return $prevpage;
 }
 
+/**
+ * Return an array with next page link and title, return false if no next page.
+ */
 function get_nextpage_next() {
 	$pagesnum = get_nextpage_count();
 
