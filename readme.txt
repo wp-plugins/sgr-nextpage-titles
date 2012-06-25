@@ -37,13 +37,17 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 
 == Changelog ==
 
+= 0.55 =
+* Bug fix:
+	* Empty page doesn't return notices (debug mode on) anymore.
+
 = 0.50 =
 * New features:
 	* The summary is now linked as a page.
 	* Added next & prev link rel to the head.
 * Enhancements:
 	* Rewrite the code to request parts via pagenumber.
-	* Made changes to bottom link style.
+	* Made changes to bottom links style.
 * Bug fix:
 	* Uncorrect pagetitle now returns 404.
 
@@ -65,5 +69,4 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 
 = To Do =
 * Make you possible to disable the index or even to show it just on the first page.
-* Correct the notices returning on empty home page.
 * Fix links in preview mode.

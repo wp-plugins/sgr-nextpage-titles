@@ -95,8 +95,10 @@ function nextpage_return_404() {
 function nextpage_wp() {
 	global $post, $paget;
 
-	$id = (int) $post->ID;
-	$content = $post->post_content;
+	if ($post) {
+		$id = (int) $post->ID;
+		$content = $post->post_content;
+	}
 
 	if ( is_single() ) {
 		

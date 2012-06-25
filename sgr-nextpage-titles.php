@@ -21,7 +21,7 @@ define( 'SGRNPT_CSS_FOLDER', 'css/' );
 /* Translations
 | --------------------------------------------- */
 
-load_plugin_textdomain( 'sgr-nextpage-titles', false, 'sgr-nextpage-titles/' . SGRNPT_LANG_FOLDER );
+load_plugin_textdomain( 'sgr-nextpage-titles', false, SGRNPT_PLUGIN_DIR . SGRNPT_LANG_FOLDER );
 
 /* Includes
 | --------------------------------------------- */
