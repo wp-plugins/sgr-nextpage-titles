@@ -23,6 +23,9 @@ Every subpage will have SEO friendly urls based on the given title, to make also
 = Forget about the old `&lt;!--nextpage--&gt;` =
 Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
 
+= Make we know you care =
+Please make we know you care about SGR Nextpage Titles plugin development rating it (5 stars).
+
 == Installation ==
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
@@ -40,6 +43,7 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 = 0.55 =
 * Bug fix:
 	* Empty page doesn't return notices (debug mode on) anymore.
+	* Bloked SGRNp use on post_types different from posts cause permalinks doesn't work yet.
 
 = 0.50 =
 * New features:
@@ -67,6 +71,10 @@ Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage T
 = 0.22 =
 * Initial beta release.
 
-= To Do =
-* Make you possible to disable the index or even to show it just on the first page.
+= To Do Release 1.0 =
+* Fix custom post type permalinks.
 * Fix links in preview mode.
+
+= To Do Release 2.0 =
+* Make you possible to save some options like show bottom links or index or show the index just on the first page.
+* Make you possible to specify arguments into the shortcode that will overwrite default options.

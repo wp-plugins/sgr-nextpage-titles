@@ -100,7 +100,7 @@ function nextpage_wp() {
 		$content = $post->post_content;
 	}
 
-	if ( is_single() ) {
+	if ( is_single() && $post->post_type == 'post' ) {
 		
 		$paget = get_nextpage_count();
 		
@@ -374,7 +374,7 @@ function nextpage_rewrite_rules() {
 	$rewrite_tag = '%paget%';
 
 	// Add the rewrite tokens
-	$wp_rewrite->add_rewrite_tag( $rewrite_tag, '(.+?)', 'paget=' );
+	add_rewrite_tag( $rewrite_tag, '(.+?)', 'paget=' );
 
 	// Define the custom permalink structure
 	$rewrite_keywords_structure = $wp_rewrite->root . get_option('permalink_structure') . $rewrite_tag . "/?";
