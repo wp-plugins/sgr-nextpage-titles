@@ -21,10 +21,7 @@ Forget about too long posts, infinite height pages, diffculty to found a post se
 Every subpage will have SEO friendly urls based on the given title, to make also happy Search Engines and spider bots that will navigate through your Blog pages.
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
-Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
-
-= Make we know you care =
-Please make we know you care about SGR Nextpage Titles plugin development rating it (5 stars).
+Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the page number.
 
 == Installation ==
 
@@ -74,6 +71,7 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 = To Do Release 1.0 =
 * Fix custom post type permalinks.
 * Fix links in preview mode.
+* Fix /feed/ url doesn't work.
 
 = To Do Release 2.0 =
 * Make you possible to save some options like show bottom links or index or show the index just on the first page.
