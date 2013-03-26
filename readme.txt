@@ -40,9 +40,8 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 == Changelog ==
 
 = 0.60 =
-* New Features *
+* New Features:
 	* Quite completely rewritten! now uses the internal core of WordPress nextpage original code.
-
 * Bug fix:
 	* Many...
 	* Unfortunately I had to modify the subpage pretty link for permalinks due to conflicts with attachment pages, now subpages have 'subpage-' prefix.
