@@ -1,0 +1,30 @@
+.entry-content .entry-subtitle {
+	font-size: 14px;
+	font-size: 1rem;
+}
+.entry-content .back-link,
+.entry-content .continue-link {
+	text-align: right;
+	margin-bottom: 14px;
+	margin-bottom: 1rem;
+}
+ul.sgr-npt-summary {
+	border: 1px solid #ccc;
+	list-style: none;
+	padding: 0;
+}
+ul.sgr-npt-summary li {
+	margin: 0;
+	padding: 2px 4px;
+	border-bottom: 1px solid #eee;
+}
+ul.sgr-npt-summary li:last-child {
+	border-bottom: 0;
+}
+ul.sgr-npt-summary li span {
+	font-weight: bold;
+}
+ul.sgr-npt-summary a {
+	display: inline;
+	text-decoration: none;
+}
