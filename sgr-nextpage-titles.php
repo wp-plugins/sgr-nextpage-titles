@@ -5,12 +5,12 @@ Plugin Name: SGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages, and pretty urls. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.6
+Version: 0.6.3
 Author URI: http://www.gonk.it/
 */
 
-register_activation_hook(__FILE__    , array('Nextpage_Titles_Loader', 'install_plugin'));									// Registering plugin activation hook.
-register_deactivation_hook( __FILE__    , array('Nextpage_Titles_Loader', 'uninstall_plugin'));								// Registering plugin deactivation hook.
+register_activation_hook(__FILE__    	, array('Nextpage_Titles_Loader', 'install_plugin'));		// Registering plugin activation hook.
+register_deactivation_hook( __FILE__    , array('Nextpage_Titles_Loader', 'uninstall_plugin'));		// Registering plugin deactivation hook.
 
 /**
  * Load the SGR Nextpage Title default option values
@@ -32,7 +32,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '0.6';
+	const VERSION = '0.6.3';
 
 	/**
 	 * Let's get it started
