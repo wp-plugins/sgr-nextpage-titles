@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 0.65
+Stable tag: 0.7
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -38,6 +38,13 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 2. A sample page using SGR Nextpage Titles plugin.
 
 == Changelog ==
+
+= 0.7 =
+* Bug fix:
+	* Correct a bug that sometimes displayed summary on loop pages.
+
+* New Features *
+	* Possibility to give a different name to "intro", just create a nextpage title shortcode on the first line of the editor.
 
 = 0.6.3 =
 * Bug fix:
