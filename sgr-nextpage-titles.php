@@ -5,12 +5,12 @@ Plugin Name: SGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages, and pretty urls. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.65
+Version: 0.72
 Author URI: http://www.gonk.it/
 */
 
-register_activation_hook(__FILE__    	, array('Nextpage_Titles_Loader', 'install_plugin'));		// Registering plugin activation hook.
-register_deactivation_hook( __FILE__    , array('Nextpage_Titles_Loader', 'uninstall_plugin'));		// Registering plugin deactivation hook.
+register_activation_hook(__FILE__			, array('Nextpage_Titles_Loader', 'install_plugin'));									// Registering plugin activation hook.
+register_deactivation_hook( __FILE__		, array('Nextpage_Titles_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
 
 /**
  * Load the SGR Nextpage Title default option values
@@ -32,7 +32,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '0.6.3';
+	const VERSION = '0.7';
 
 	/**
 	 * Let's get it started
@@ -103,18 +103,32 @@ class Nextpage_Titles_Loader {
 		
 		// Variables
 		$content = $post->post_content;
-		$page = (get_query_var('page')) ? get_query_var('page') : 1;
+		$temp_content = $content;
+		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 		$pattern = "/\[nextpage[^\]]*\]/";
 		$post_pages = array();
 		$p = 0;
 		
 		preg_match_all($pattern, $content, $matches);
 		foreach ($matches[0] as $match) {
+			// Check if the intro has a Title
+			if ( 0 == $p ) :
+				if ( 0 != strpos( $content, $match ) ) :
+					$post_pages[] = __( 'Intro', 'sgr-npt' );
+					$current_title = $this->get_nextpage_title( $match, $p );
+				else :
+					$current_title = $this->get_nextpage_title( $match, $p );
+					$temp_content = str_replace( $match, '', $content );
+				endif;
+			else :
+				$current_title = $this->get_nextpage_title( $match, $p );
+			endif;
+		
+			$post_pages[] = $current_title;			
 			$p++;
-			$current_title = $this->get_nextpage_title($match, $p);
-			$post_pages[] = $current_title;
 		}
-		$post->post_content = preg_replace($pattern, '<!--nextpage-->', $content);
+
+		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $temp_content );
 		
 		if ( $prettyurl == true ) {
 			$paget = str_replace( "/subpage-", "", (get_query_var('paget')) ? get_query_var('paget') : '' );
@@ -122,9 +136,9 @@ class Nextpage_Titles_Loader {
 			if ( $paget )
 				$page = $this->get_nextpage_pagenum( $paget, $post_pages );
 		}
-
-		// If there are not subpages exit
-		if ( empty($post_pages) )
+		// If there aren't subpages or it's a loop, exit
+		// Use is_singular because it looks for every post
+		if ( empty($post_pages) || ( ! is_singular() ) )
 			return;
 		
 		add_action( 'the_post', array( 'Nextpage_Titles_Loader', 'set_npt_pagenum' ) );
@@ -144,7 +158,7 @@ class Nextpage_Titles_Loader {
 		if ($count)
 			return $matches[2];
 		else
-			return "Page $pagen";
+			return __( 'Page '. 'sgr-npt' ) . $pagen;
 	}
 
 	/**
@@ -168,8 +182,8 @@ class Nextpage_Titles_Loader {
 		$p = 0;	
 		foreach ($post_pages as $post_page) {
 			$p++;
-			if ( sanitize_title($post_page) == $paget )
-				return $p +1;
+			if ( sanitize_title( $post_page ) == $paget )
+				return $p;
 		}
 		return 0;
 	}
@@ -221,35 +235,34 @@ function add_to_the_content( $content ) {
 	
 	global $post, $post_pages;
 	
-	$p = 1;
+	$p = 0;
 	$subtitle = '';
-	$page = (get_query_var('page')) ? get_query_var('page') : 1;
+	$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 	$paget = str_replace("/subpage-", "", (get_query_var('paget')) ? get_query_var('paget') : '');
 
 	if( $paget )
 		$page = Nextpage_Titles_Loader::get_nextpage_pagenum( $paget, $post_pages );
 	
+	// Add subtitle to the page
 	if ( $page > 1 )
-		$subtitle = '<h2 class="entry-subtitle">' . $post_pages[ $page -2 ] . '</h2>';
+		$subtitle = '<h2 class="entry-subtitle">' . $post_pages[ $page -1 ] . '</h2>';
 
-	if ( $page > count( $post_pages ) ) :
+	if ( $page === count( $post_pages ) ) :
 		$navlink = '
-			<div class="back-link">' . __( 'End: ', 'sgr-npt' ) . ' <a href="' . get_permalink( $post->ID ) . '">' . __( 'Back to intro', 'sgr-npt' ) .'</a></div>';
+			<div class="back-link">' . __( 'End: ', 'sgr-npt' ) . ' <a href="' . get_permalink( $post->ID ) . '">' . __( 'Back to index', 'sgr-npt' ) . '</a></div>';
 	else :
 		$navlink = '
-			<div class="continue-link">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . get_pagetitle_link( $post->ID, $page +1, $post_pages[ $page -1 ] ) . '">' . $post_pages[$page -1] .'</a></div>';
+			<div class="continue-link">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . get_pagetitle_link( $post->ID, $page +1, $post_pages[ $page ] ) . '">' . $post_pages[ $page ] .'</a></div>';
 	endif;
 	
 	$summary = '
-		<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">
-			<li class="subpage-' . $p . '"><span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>
-			<a href="' . get_permalink( $post->ID ) . '">' . __( 'Intro', 'sgr-npt' ) . '</a></li>';
+		<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">';
 
 	foreach ($post_pages as $match) {
 		$p++;
 		$summary .= '
 			<li class="subpage-' . $p . '"><span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>
-			<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -2 ] ) . '">' . $match . '</a></li>';
+			<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -1 ] ) . '">' . $match . '</a></li>';
 	}
 
 	$summary .= '</ul><!-- #sgr-npt-summary-' . $post->ID . '-->';
@@ -260,8 +273,12 @@ function add_to_the_content( $content ) {
 
 function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
 	$base = get_permalink( $postid );
+
+	// If it's the first page the link is the base permalink
+	if ( $pagenum < 2 )
+		return $base;
 	
-	if ( !get_option('permalink_structure') || is_admin() )
+	if ( ! get_option('permalink_structure') || is_admin() )
 		return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
 		//return add_query_arg( array('page' => $pagenum), $base ); /* this is if you want number instead of pretty links */
 	
