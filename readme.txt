@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 0.73
+Stable tag: 0.8
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -17,8 +17,8 @@ Then SGR Nextpage Titles will show an index, that will link to each subpage foun
 = Make order in your posts! =
 Forget about too long posts, infinite height pages, diffculty to found a post section. With SGR Nextpage Titles you can divide every post into different subpages, giving them a title and obtaining an index that will show the summary of the post and will redirect your visitors to the desidered section (subpage) of your post.
 
-= Have SEO friendly url for your subpages =
-Every subpage will have SEO friendly urls based on the given title, to make also happy Search Engines and spider bots that will navigate through your Blog pages.
+= Benefit from different subpages =
+Every subpage will generate a different page view, so your statistics will benefit.
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
 Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
@@ -38,6 +38,13 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 2. A sample page using SGR Nextpage Titles plugin.
 
 == Changelog ==
+
+= 0.8 =
+* Bug fix:
+	* Definitively solved the 404 error, caused by pretty urls that are now deprecated (eventually waiting for a 2.0 working version) in favor of native page numbers. Different subpages will have now the same link of the original `<!--nextpage-->` code . 
+
+* New Features *
+	* Added the initial code for the configuration page (not active yet).
 
 = 0.7 =
 * Bug fix:
@@ -93,4 +100,6 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 = To Do Release 1.0 =
 * Legacy mode.
 * Settings page.
-* Make possible to change the 'subpage-' prefix.
+
+= To Do Release 2.0 =
+* Pretty urls (not sure).

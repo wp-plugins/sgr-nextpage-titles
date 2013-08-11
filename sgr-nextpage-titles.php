@@ -3,9 +3,9 @@
 /*
 Plugin Name: SGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
-Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages, and pretty urls. 
+Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.73
+Version: 0.8
 Author URI: http://www.gonk.it/
 */
 
@@ -22,7 +22,7 @@ require_once( dirname(__FILE__) . '/config.php' );
 /**
  * Load the SGR Nextpage Title plugin
  *
- * @since 1.1
+ * @since 0.6
  */
 class Nextpage_Titles_Loader {
 	/**
@@ -52,7 +52,6 @@ class Nextpage_Titles_Loader {
 		Nextpage_Titles_Shortcodes::init();
 		
 		add_action( 'wp', array( &$this, 'public_init' ) );
-		add_filter('query_vars', array( 'Nextpage_Titles_Loader', 'add_paget_query_var' ) );
 	}
 	
 	/**
@@ -69,9 +68,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 */
 	static function install_plugin() {
-		// Load new rewrite rules & flush
-		Nextpage_Titles_Loader::add_paget_rewrite_rule();
-		flush_rewrite_rules();
+		
 	}
 	
 	/**
@@ -80,8 +77,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 */
 	static function uninstall_plugin() {
-		// Flush rewrite rules
-		flush_rewrite_rules();
+
 	}
 	
 	/**
@@ -93,11 +89,6 @@ class Nextpage_Titles_Loader {
 		// no need to process
 		if ( is_feed() || is_404() || true == get_query_var('preview') )
 			return;
-			
-		$prettyurl = false;
-			
-		if ( 'post' == get_post_type() )
-			$prettyurl = true;
 		
 		global $post, $post_pages, $wp_rewrite;
 		
@@ -130,12 +121,6 @@ class Nextpage_Titles_Loader {
 
 		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $temp_content );
 		
-		if ( $prettyurl == true ) {
-			$paget = str_replace( "/subpage-", "", (get_query_var('paget')) ? get_query_var('paget') : '' );
-			// If there is the query var for the title, convert it into page number
-			if ( $paget )
-				$page = $this->get_nextpage_pagenum( $paget, $post_pages );
-		}
 		// If there aren't subpages or it's a loop, exit
 		// Use is_singular because it looks for every post
 		if ( empty($post_pages) || ( ! is_singular() ) )
@@ -160,46 +145,6 @@ class Nextpage_Titles_Loader {
 		else
 			return __( 'Page '. 'sgr-npt' ) . $pagen;
 	}
-
-	/**
-	 * Enable the paget query var to pass the title in place of the page number
-	 *
-	 * @since 0.6
-	 */
-	public static function add_paget_query_var($public_query_vars) {
-		$public_query_vars[] = 'paget';
-		return $public_query_vars;
-	}
-
-	/**
-	 * Retrieve the number of the page from the paget var.
-	 *
-	 * @since 0.6
-	 * @var string, array
-	 */
-	public function get_nextpage_pagenum($paget, $post_pages = array() ) {
-	
-		$p = 0;	
-		foreach ($post_pages as $post_page) {
-			$p++;
-			if ( sanitize_title( $post_page ) == $paget )
-				return $p;
-		}
-		return 0;
-	}
-	
-	/**
-	 * Set the current page on the nextpage title page number
-	 *
-	 * @since 0.6
-	 */
-	public function set_npt_pagenum() {
-		global $page, $post_pages;
-
-		$paget = str_replace("/subpage-", "", (get_query_var('paget')) ? get_query_var('paget') : '');
-		if ( $paget )
-			$page = Nextpage_Titles_Loader::get_nextpage_pagenum( $paget, $post_pages );	
-	}
 	
 	/**
 	 * Styles applied to public-facing pages
@@ -218,7 +163,8 @@ class Nextpage_Titles_Loader {
 	 */
 	public function add_paget_rewrite_rule() {
 		//add_rewrite_rule( '(.?.+?)(/subpage-[^/]+)?/?$', 'index.php?name=$matches[1]&paget=$matches[2]', 'top'); /* for pages */
-		add_rewrite_rule( '([0-9]{4})/([0-9]{1,2})/([^/]+)(/subpage-[^/]+)?/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&name=$matches[3]&paget=$matches[4]', 'top');
+		//add_rewrite_rule( '([0-9]{4})/([0-9]{1,2})/([^/]+)(/subpage-[^/]+)?/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&name=$matches[3]&paget=$matches[4]', 'top');
+		//add_rewrite_rule( '([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/([^/]+)(/subpage-[^/]+)?/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&name=$matches[4]&paget=$matches[5]', 'top');
 	}
 }
 
@@ -238,10 +184,6 @@ function add_to_the_content( $content ) {
 	$p = 0;
 	$subtitle = '';
 	$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
-	$paget = str_replace("/subpage-", "", (get_query_var('paget')) ? get_query_var('paget') : '');
-
-	if( $paget )
-		$page = Nextpage_Titles_Loader::get_nextpage_pagenum( $paget, $post_pages );
 	
 	// Add subtitle to the page
 	if ( $page > 1 )
@@ -259,9 +201,16 @@ function add_to_the_content( $content ) {
 		<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">';
 
 	foreach ($post_pages as $match) {
+	
+		if ( $p == $page ) :
+			$liclass = " selected";
+		else :
+			$liclass = "";
+		endif;
+		
 		$p++;
 		$summary .= '
-			<li class="subpage-' . $p . '"><span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>
+			<li class="subpage-' . $p . $liclass . '"><span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>
 			<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -1 ] ) . '">' . $match . '</a></li>';
 	}
 
@@ -279,14 +228,10 @@ function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
 		return $base;
 	
 	if ( ! get_option('permalink_structure') || is_admin() )
-		return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
-		//return add_query_arg( array('page' => $pagenum), $base ); /* this is if you want number instead of pretty links */
+		// return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
+		return add_query_arg( array('page' => $pagenum), $base ); /* this is if you want number instead of pretty links */
 	
-	// If not post post_type, disable pretty url
-	if ( 'post' != get_post_type() )
-		return $base . user_trailingslashit( $pagenum, 'page' );
-
-	return $base . user_trailingslashit( 'subpage-' . sanitize_title($paget), 'paget' );
+	return $base . user_trailingslashit( $pagenum, 'page' );
 }
 
 /**
