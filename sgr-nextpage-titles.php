@@ -5,7 +5,7 @@ Plugin Name: SGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.8
+Version: 0.82
 Author URI: http://www.gonk.it/
 */
 
@@ -32,7 +32,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '0.7';
+	const VERSION = '0.9';
 
 	/**
 	 * Let's get it started
@@ -51,7 +51,11 @@ class Nextpage_Titles_Loader {
 			require_once( $this->plugin_directory . 'classes/shortcodes.php' );
 		Nextpage_Titles_Shortcodes::init();
 		
-		add_action( 'wp', array( &$this, 'public_init' ) );
+		if ( is_admin() ) {
+			//$this->admin_init();
+		} else {
+			add_action( 'wp', array( &$this, 'public_init' ) );
+		}
 	}
 	
 	/**
@@ -126,10 +130,22 @@ class Nextpage_Titles_Loader {
 		if ( empty($post_pages) || ( ! is_singular() ) )
 			return;
 		
-		add_action( 'the_post', array( 'Nextpage_Titles_Loader', 'set_npt_pagenum' ) );
 		add_action( 'wp_enqueue_scripts', array( 'Nextpage_Titles_Loader', 'enqueue_styles' ) );
 		add_filter( 'wp_link_pages_args', 'sgrnpt_next_prev' );
 		add_filter( 'the_content', 'add_to_the_content', 10 );
+	}
+	
+	/**
+	 * Initialize the backend
+	 *
+	 * @since 0.9
+	 */
+	public function admin_init() {
+		$admin_dir = $this->plugin_directory . 'admin/';
+
+		if ( ! class_exists( 'Nextpage_Titles_Settings' ) )
+			require_once( $admin_dir . 'settings.php' );
+		Nextpage_Titles_Settings::init();
 	}
 		
 	/**

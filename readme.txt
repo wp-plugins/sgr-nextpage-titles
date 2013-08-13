@@ -3,8 +3,8 @@ Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 0.8
+Tested up to: 3.6
+Stable tag: 0.82
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -39,9 +39,13 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 0.82 =
+* Bug fix:
+	* Removed a deprecated function that in some conditions generated errors. 
+
 = 0.8 =
 * Bug fix:
-	* Definitively solved the 404 error, caused by pretty urls that are now deprecated (eventually waiting for a 2.0 working version) in favor of native page numbers. Different subpages will have now the same link of the original `<!--nextpage-->` code . 
+	* Definitively solved the 404 error, caused by pretty urls that are now deprecated (eventually waiting for a 2.0 working version) in favor of native page numbers. Different subpages will have now the same link of the original `<!--nextpage-->` code. 
 
 * New Features *
 	* Added the initial code for the configuration page (not active yet).
