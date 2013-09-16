@@ -1,10 +1,11 @@
+
 === SGR Nextpage Titles ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.6
-Stable tag: 0.83
+Stable tag: 0.85
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -39,7 +40,7 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
-= 0.83 =
+= 0.84 =
 * Bug fix:
 	* Fix a permalink bug with structures without a slash at the end.
 

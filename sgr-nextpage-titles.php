@@ -5,7 +5,7 @@ Plugin Name: SGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.83
+Version: 0.85
 Author URI: http://www.gonk.it/
 */
 
@@ -247,7 +247,7 @@ function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
 		// return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
 		return add_query_arg( array('page' => $pagenum), $base ); /* this is if you want number instead of pretty links */
 	
-	return trailingslashit( $base . user_trailingslashit( $pagenum, 'page' );
+	return trailingslashit( $base ) . user_trailingslashit( $pagenum, 'page' );
 }
 
 /**
