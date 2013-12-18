@@ -1,11 +1,11 @@
 <?php
 
 /*
-Plugin Name: SGR Nextpage Titles
+Plugin Name: sGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.85
+Version: 0.91
 Author URI: http://www.gonk.it/
 */
 
@@ -13,14 +13,14 @@ register_activation_hook(__FILE__			, array('Nextpage_Titles_Loader', 'install_p
 register_deactivation_hook( __FILE__		, array('Nextpage_Titles_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
 
 /**
- * Load the SGR Nextpage Title default option values
+ * Load the sGR Nextpage Title default option values
  *
  * @since 0.6
  */
 require_once( dirname(__FILE__) . '/config.php' ); 
 
 /**
- * Load the SGR Nextpage Title plugin
+ * Load the sGR Nextpage Title plugin
  *
  * @since 0.6
  */
@@ -91,7 +91,7 @@ class Nextpage_Titles_Loader {
 	 */
 	public function public_init() {
 		// no need to process
-		if ( is_feed() || is_404() || true == get_query_var('preview') )
+		if ( is_feed() || is_404() )
 			return;
 		
 		global $post, $post_pages, $wp_rewrite;
@@ -169,7 +169,31 @@ class Nextpage_Titles_Loader {
 	 * @uses enqueue_styles()
 	 */
 	public static function enqueue_styles() {
-		wp_enqueue_style( 'nextpage-titles', plugins_url( 'css/default' . ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ) . '.css', __FILE__ ), array(), self::VERSION );
+	
+		// LTR or RTL
+		$file = is_rtl() ? 'css/nextpagetitles-rtl' : 'css/nextpagetitles';
+		
+		// Minimized version or not
+		$file .= ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ) . '.css';
+
+		// Check child theme
+		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $file ) ) {
+			$location = trailingslashit( get_stylesheet_directory_uri() );
+			$handle   = 'child-nextpage-titles';
+
+		// Check parent theme
+		} elseif ( file_exists( trailingslashit( get_template_directory() ) . $file ) ) {
+			$location = trailingslashit( get_template_directory_uri() );
+			$handle   = 'parent-nextpage-titles';
+
+		// sGR NextPage Titles Theme Compatibility
+		} else {
+			$location = trailingslashit( plugin_dir_url( __FILE__ ) );
+			$handle   = 'default-nextpage-titles';
+		}
+
+		// Enqueue the sGR NextPage Titles styling
+		wp_enqueue_style( $handle, $location . $file, array(), self::VERSION, 'screen' );
 	}
 	
 	/**
@@ -240,12 +264,12 @@ function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
 	$base = get_permalink( $postid );
 
 	// If it's the first page the link is the base permalink
-	if ( $pagenum < 2 )
-		return $base;
+	//if ( $pagenum < 2 )
+		//return $base;
 	
-	if ( ! get_option('permalink_structure') || is_admin() )
+	if ( ! get_option('permalink_structure') || is_admin() || true == get_query_var('preview') )
 		// return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
-		return add_query_arg( array('page' => $pagenum), $base ); /* this is if you want number instead of pretty links */
+		return add_query_arg( array('page' => $pagenum) ); /* this is if you want number instead of pretty links */
 	
 	return trailingslashit( $base ) . user_trailingslashit( $pagenum, 'page' );
 }

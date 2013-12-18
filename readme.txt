@@ -1,11 +1,10 @@
-
 === SGR Nextpage Titles ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
-Tested up to: 3.6
-Stable tag: 0.85
+Tested up to: 3.8
+Stable tag: 0.91
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -40,7 +39,21 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
-= 0.84 =
+= 0.91 =
+* Enhancements:
+	* Updated "Tested up to" with the new WordPress 3.8
+	* Added language support for German (thanks to <a rel="nofollow" href="http://wordpress.org/support/profile/myigel">Igor Scheller</a>)
+
+= 0.90 =
+* Bug fix:
+	* Now you can navigate through the pages also in previews.
+* Enhancements:
+	* RTL first support.
+	* Customized css automatic load (put your nextpage-titles.css in WordPress theme/child-theme css directory ex. /wp-content/themes/twentythirteen/css/nextpage-titles.css)
+
+
+
+= 0.85 =
 * Bug fix:
 	* Fix a permalink bug with structures without a slash at the end.
 
