@@ -1,11 +1,11 @@
 <?php
 
 /*
-Plugin Name: SGR Nextpage Titles
+Plugin Name: sGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.90
+Version: 0.91
 Author URI: http://www.gonk.it/
 */
 
@@ -13,14 +13,14 @@ register_activation_hook(__FILE__			, array('Nextpage_Titles_Loader', 'install_p
 register_deactivation_hook( __FILE__		, array('Nextpage_Titles_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
 
 /**
- * Load the SGR Nextpage Title default option values
+ * Load the sGR Nextpage Title default option values
  *
  * @since 0.6
  */
 require_once( dirname(__FILE__) . '/config.php' ); 
 
 /**
- * Load the SGR Nextpage Title plugin
+ * Load the sGR Nextpage Title plugin
  *
  * @since 0.6
  */
@@ -186,13 +186,13 @@ class Nextpage_Titles_Loader {
 			$location = trailingslashit( get_template_directory_uri() );
 			$handle   = 'parent-nextpage-titles';
 
-		// SGR NextPage Titles Theme Compatibility
+		// sGR NextPage Titles Theme Compatibility
 		} else {
 			$location = trailingslashit( plugin_dir_url( __FILE__ ) );
 			$handle   = 'default-nextpage-titles';
 		}
 
-		// Enqueue the bbPress styling
+		// Enqueue the sGR NextPage Titles styling
 		wp_enqueue_style( $handle, $location . $file, array(), self::VERSION, 'screen' );
 	}
 	
