@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 0.91
+Stable tag: 0.92
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -39,6 +39,10 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 0.92 =
+* Bug fix:
+	* Now returns 404 error if the requested page number doesn't exists. It works also if the requested page is 1, because the real permalink is the base one.
+
 = 0.91 =
 * Enhancements:
 	* Updated "Tested up to" with the new WordPress 3.8
@@ -50,8 +54,6 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 * Enhancements:
 	* RTL first support.
 	* Customized css automatic load (put your nextpage-titles.css in WordPress theme/child-theme css directory ex. /wp-content/themes/twentythirteen/css/nextpage-titles.css)
-
-
 
 = 0.85 =
 * Bug fix:
