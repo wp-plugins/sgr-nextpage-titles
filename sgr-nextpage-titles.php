@@ -5,7 +5,7 @@ Plugin Name: sGR Nextpage Titles
 Plugin URI: http://www.gonk.it/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.91
+Version: 0.92
 Author URI: http://www.gonk.it/
 */
 
@@ -94,12 +94,12 @@ class Nextpage_Titles_Loader {
 		if ( is_feed() || is_404() )
 			return;
 		
-		global $post, $post_pages, $wp_rewrite;
-		
+		global $post, $post_pages;
+
 		// Variables
+		$page = get_query_var('page');
 		$content = $post->post_content;
 		$temp_content = $content;
-		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 		$pattern = "/\[nextpage[^\]]*\]/";
 		$post_pages = array();
 		$p = 0;
@@ -121,6 +121,14 @@ class Nextpage_Titles_Loader {
 		
 			$post_pages[] = $current_title;			
 			$p++;
+		}
+		
+		// If the requested page doesn't exist (even if there is a declared page=1 variable)
+		if ( $page == 1 || $page > $p ) {
+
+			// Return 404 page
+			$this->return_404();
+
 		}
 
 		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $temp_content );
@@ -160,6 +168,18 @@ class Nextpage_Titles_Loader {
 			return $matches[2];
 		else
 			return __( 'Page '. 'sgr-npt' ) . $pagen;
+	}
+	
+	/**
+	 * Return a 404 page.
+	 *
+	 * @since 0.9
+	 */
+	private function return_404() {
+		global $wp_query;
+		
+		$wp_query->set_404();
+		status_header(404);
 	}
 	
 	/**
@@ -264,8 +284,8 @@ function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
 	$base = get_permalink( $postid );
 
 	// If it's the first page the link is the base permalink
-	//if ( $pagenum < 2 )
-		//return $base;
+	if ( $pagenum < 2 )
+		return $base;
 	
 	if ( ! get_option('permalink_structure') || is_admin() || true == get_query_var('preview') )
 		// return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
