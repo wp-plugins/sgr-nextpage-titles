@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: sGR Nextpage Titles
-Plugin URI: http://www.gonk.it/
+Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.92
+Version: 0.93
 Author URI: http://www.gonk.it/
 */
 
@@ -33,6 +33,24 @@ class Nextpage_Titles_Loader {
 	 * @var string
 	 */
 	const VERSION = '0.9';
+	
+	/**
+	 * Do you want to display the summary only on the first page of the post?
+	 *
+	 * @since 0.93
+	 *
+	 * @var bool
+	 */
+	public $summary_oofp = false;
+	
+	/**
+	 * Do you want to display page labels in the summary?
+	 *
+	 * @since 0.93
+	 *
+	 * @var bool
+	 */
+	public $summary_page_labels = false;
 
 	/**
 	 * Let's get it started
@@ -45,6 +63,10 @@ class Nextpage_Titles_Loader {
 
 		// Load the textdomain for translations
 		load_plugin_textdomain( 'sgr-npt', true, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+		// load sGR Nextpage Titles main settings		
+		$this->summary_oofp = (bool) get_option( 'npt_summary_oofp' );
+		$this->summary_page_labels = (bool) get_option( 'npt_summary_page_labels' );
 	
 		// load shortcodes
 		if ( ! class_exists( 'Nextpage_Titles_Shortcodes' ) )
@@ -52,7 +74,7 @@ class Nextpage_Titles_Loader {
 		Nextpage_Titles_Shortcodes::init();
 		
 		if ( is_admin() ) {
-			//$this->admin_init();
+			$this->admin_init();
 		} else {
 			add_action( 'wp', array( &$this, 'public_init' ) );
 		}
@@ -146,11 +168,12 @@ class Nextpage_Titles_Loader {
 	/**
 	 * Initialize the backend
 	 *
-	 * @since 0.9
+	 * @since 0.93
 	 */
 	public function admin_init() {
 		$admin_dir = $this->plugin_directory . 'admin/';
 
+		// sGR NextPage Titles settings loader
 		if ( ! class_exists( 'Nextpage_Titles_Settings' ) )
 			require_once( $admin_dir . 'settings.php' );
 		Nextpage_Titles_Settings::init();
@@ -167,7 +190,7 @@ class Nextpage_Titles_Loader {
 		if ($count)
 			return $matches[2];
 		else
-			return __( 'Page '. 'sgr-npt' ) . $pagen;
+			return __( 'Page ', 'sgr-npt' ) . $pagen;
 	}
 	
 	/**
@@ -191,7 +214,7 @@ class Nextpage_Titles_Loader {
 	public static function enqueue_styles() {
 	
 		// LTR or RTL
-		$file = is_rtl() ? 'css/nextpagetitles-rtl' : 'css/nextpagetitles';
+		$file = is_rtl() ? 'static/css/nextpagetitles-rtl' : 'static/css/nextpagetitles';
 		
 		// Minimized version or not
 		$file .= ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ) . '.css';
@@ -239,10 +262,11 @@ function add_to_the_content( $content ) {
 	if ( ! $content )
 		return $content;
 	
-	global $post, $post_pages;
+	global $nextpage_titles_loader, $post, $post_pages;
 	
 	$p = 0;
 	$subtitle = '';
+	$summary = '';
 	$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 	
 	// Add subtitle to the page
@@ -257,24 +281,33 @@ function add_to_the_content( $content ) {
 			<div class="continue-link">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . get_pagetitle_link( $post->ID, $page +1, $post_pages[ $page ] ) . '">' . $post_pages[ $page ] .'</a></div>';
 	endif;
 	
-	$summary = '
-		<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">';
-
-	foreach ($post_pages as $match) {
-	
-		if ( $p == $page ) :
-			$liclass = " selected";
-		else :
-			$liclass = "";
-		endif;
+	if ( $nextpage_titles_loader->summary_oofp == false || ( $page == 1 ) ) {
 		
-		$p++;
-		$summary .= '
-			<li class="subpage-' . $p . $liclass . '"><span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>
-			<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -1 ] ) . '">' . $match . '</a></li>';
-	}
+		$summary = '
+			<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">';
 
-	$summary .= '</ul><!-- #sgr-npt-summary-' . $post->ID . '-->';
+		foreach ($post_pages as $match) {
+		
+			if ( $p == $page ) :
+				$liclass = " selected";
+			else :
+				$liclass = "";
+			endif;
+			
+			$p++;
+			$summary .= '
+				<li class="subpage-' . $p . $liclass . '">';
+				
+			if ( $nextpage_titles_loader->summary_page_labels == true )
+				$summary .= '<span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>';
+				
+			$summary .= '
+					<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -1 ] ) . '">' . $match . '</a></li>';
+		}
+
+		$summary .= '</ul><!-- #sgr-npt-summary-' . $post->ID . '-->';
+	
+	}
 
 	// Return the content
 	return $subtitle . $content . $navlink . $summary;
