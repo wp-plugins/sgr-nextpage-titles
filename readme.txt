@@ -1,10 +1,10 @@
 === SGR Nextpage Titles ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
-Tags: nextpage, seo, subpages
+Tags: nextpage, seo, subpages, summary, multipage
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 0.93
+Stable tag: 0.94
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -39,9 +39,13 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 0.94 =
+* Bug fix:
+	* Fixed a bug that returned, in some conditions (there is no intro title), 404 on the last page. 
+
 = 0.93 =
-* New Features *
-	* Now you can configurate some summary appearance options. The admin menu is under "Settings".
+* New Features:
+	* Now you can configure some summary appearance options. The admin menu is under "Settings".
 
 = 0.92 =
 * Bug fix:
@@ -84,7 +88,7 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 	* Version numbers, somebody couldn't update it. Now it's ok.
 
 = 0.6 =
-* New Features *
+* New Features:
 	* Quite completely rewritten! now uses the internal core of WordPress nextpage original code.
 * Bug fix:
 	* Many...
