@@ -4,7 +4,7 @@ Donate link: http://goo.gl/QuRfT
 Tags: nextpage, seo, subpages
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 0.92
+Stable tag: 0.93
 License: GPLv2
 
 Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
@@ -39,6 +39,10 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 0.93 =
+* New Features *
+	* Now you can configurate some summary appearance options. The admin menu is under "Settings".
+
 = 0.92 =
 * Bug fix:
 	* Now returns 404 error if the requested page number doesn't exists. It works also if the requested page is 1, because the real permalink is the base one.
@@ -66,14 +70,12 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 = 0.8 =
 * Bug fix:
 	* Definitively solved the 404 error, caused by pretty urls that are now deprecated (eventually waiting for a 2.0 working version) in favor of native page numbers. Different subpages will have now the same link of the original `<!--nextpage-->` code. 
-
 * New Features *
 	* Added the initial code for the configuration page (not active yet).
 
 = 0.7 =
 * Bug fix:
 	* Correct a bug that sometimes displayed summary on loop pages.
-
 * New Features *
 	* Possibility to give a different name to "intro", just create a nextpage title shortcode on the first line of the editor.
 
@@ -84,7 +86,6 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 = 0.6 =
 * New Features *
 	* Quite completely rewritten! now uses the internal core of WordPress nextpage original code.
-
 * Bug fix:
 	* Many...
 	* Unfortunately I had to modify the subpage pretty link for permalinks due to conflicts with attachment pages, now subpages have 'subpage-' prefix.
@@ -122,8 +123,7 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 * Initial beta release.
 
 = To Do Release 1.0 =
-* Legacy mode.
-* Settings page.
+* Compatibility mode.
 
 = To Do Release 2.0 =
 * Pretty urls (not sure).
