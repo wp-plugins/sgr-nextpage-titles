@@ -1,43 +1,62 @@
-=== SGR Nextpage Titles ===
+=== sGR Nextpage Titles ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
-Tags: nextpage, seo, subpages, summary, multipage
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl.html
+Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 0.94
-License: GPLv2
+Stable tag: 1.0
 
-Make order in your posts. With SGR Nextpage Titles you can have post subpages with their own titles and a navigation index.
+Order your posts into subpages: multipage posts will have a table of contents linking single subpages with their titles.
+Make order in your posts. Have multipage posts and a table of contents linking subpages using sGR Nextpage Titles.
 
 == Description ==
 
-SGR Nextpage Titles is a WordPress plugin that will make you forget the old `<!--nextpage-->` code because it allows to add more subpages of a post, giving each subpage a title.
-Then SGR Nextpage Titles will show an index, that will link to each subpage found in the post, if shortcode is present. It will show on every page, in order to easily navigate between subpages.
+sGR Nextpage Titles is a WordPress plugin that will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
 
 = Make order in your posts! =
-Forget about too long posts, infinite height pages, diffculty to found a post section. With SGR Nextpage Titles you can divide every post into different subpages, giving them a title and obtaining an index that will show the summary of the post and will redirect your visitors to the desidered section (subpage) of your post.
+Forget about too long posts, infinite height pages, diffculty to found a post section. With sGR Nextpage Titles you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the desidered subpage of the post.
 
 = Benefit from different subpages =
 Every subpage will generate a different page view, so your statistics will benefit.
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
-Even if you will not indicate a title for your `[nextpage]` code, SGR Nextpage Titles will use a default title in the form "page-n" where "n" is the number of the page.
+The old WordPress code is not useful anymore. Even if you will not indicate a title for your `[nextpage]` code, sGR Nextpage Titles will use a default title in the form "Page #".
 
 = Make we know you care =
-Please make we know you care about SGR Nextpage Titles plugin development rating it (5 stars).
+Please make we know you care about sGR Nextpage Titles plugin development rating it (5 stars).
 
 == Installation ==
 
 1. Upload the `sgr-nextpage-titles` folder to the `/wp-content/plugins/` directory
-2. Activate the SGR Nextpage Titles Plugin through the 'Plugins' menu in WordPress
-3. Add few `[nextpage title="Pretty title"]` codes to your posts
+2. Activate the sGR Nextpage Titles Plugin through the 'Plugins' menu in WordPress
+3. Configure the plugin by going to the `Multipage` menu under `Settings`
+4. Add a few `[nextpage title="Pretty title"]` codes to your posts
 
 == Screenshots ==
 
-1. Here you can see how to use SGR Nextpage Titles shortcodes. It's very simple.
-2. A sample page using SGR Nextpage Titles plugin.
+1. Here you can see how to use sGR Nextpage Titles shortcodes. It's very simple.
+2. A sample page using sGR Nextpage Titles plugin.
+3. The configuration page placed under "Settings > Multipage".
 
 == Changelog ==
+
+= 1.0 =
+
+* New Features:
+	* Added the option to hide comments on all the subpages except in the first one.
+	* Added new options to customize the table of contents: "Hide the new TOC header", "Add a link for comments", "Show only on the first page", "Label choices", "Show before or after the content", "Hide it".
+* Enhancements:
+	* Completely rewritten part of the main code in order to improve performances.
+	* Changed some classes name (maybe you need to correct your customized css).
+	* The settings menu is now named "Multipage" (still under "Settings").	
+* Bug fix:
+	* Now multipage posts will appear correctly in non is_single() pages even if there is no `<!--more-->` code. 
+* i18n:
+	* Updated .pot file
+    * Updated Italian (it_IT)
+    * Updated Deutsch (de_DE)
 
 = 0.94 =
 * Bug fix:
@@ -53,8 +72,8 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 = 0.91 =
 * Enhancements:
-	* Updated "Tested up to" with the new WordPress 3.8
-	* Added language support for German (thanks to <a rel="nofollow" href="http://wordpress.org/support/profile/myigel">Igor Scheller</a>)
+	* Updated "Tested up to" with the new WordPress 3.8.
+	* Added language support for German (thanks to <a rel="nofollow" href="http://wordpress.org/support/profile/myigel">Igor Scheller</a>).
 
 = 0.90 =
 * Bug fix:
@@ -98,7 +117,7 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 = 0.55 =
 * Bug fix:
 	* Empty page doesn't return notices (debug mode on) anymore.
-	* Bloked SGRNp use on post_types different from posts cause permalinks doesn't work yet.
+	* Bloked sGR Nextpage Titles use on post_types different from posts cause permalinks doesn't work yet.
 
 = 0.50 =
 * New features:
@@ -125,9 +144,6 @@ Please make we know you care about SGR Nextpage Titles plugin development rating
 
 = 0.22 =
 * Initial beta release.
-
-= To Do Release 1.0 =
-* Compatibility mode.
 
 = To Do Release 2.0 =
 * Pretty urls (not sure).

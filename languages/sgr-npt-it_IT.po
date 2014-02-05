@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SGR Nextpage Titles Plugin for Wordpress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-01 20:41+0100\n"
-"PO-Revision-Date: 2014-02-01 20:41+0100\n"
+"POT-Creation-Date: 2014-02-04 18:44+0100\n"
+"PO-Revision-Date: 2014-02-04 18:45+0100\n"
 "Last-Translator: Sergio De Falco <sgr33n@ircaserta.com>\n"
 "Language-Team: SGr33n <sgr33n@ircaserta.com>\n"
 "Language: it_IT\n"
@@ -15,56 +15,97 @@ msgstr ""
 "X-Generator: Poedit 1.6.3\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../sgr-nextpage-titles.php:134
+#: ../sgr-nextpage-titles.php:102
 msgid "Intro"
 msgstr "Introduzione"
 
-#: ../sgr-nextpage-titles.php:193
-msgid "Page "
-msgstr "Pagina"
+#: ../sgr-nextpage-titles.php:197
+#, php-format
+msgid "Page %d"
+msgstr "Pagina %d"
 
-#: ../sgr-nextpage-titles.php:278
-msgid "End: "
-msgstr "Fine:"
+#: ../sgr-nextpage-titles.php:230
+msgid "Back to: "
+msgstr "Torna a:"
 
-#: ../sgr-nextpage-titles.php:278
-#, fuzzy
-msgid "Back to index"
-msgstr "Ritorna all'introduzione"
-
-#: ../sgr-nextpage-titles.php:281
+#: ../sgr-nextpage-titles.php:232
 msgid "Continue:"
 msgstr "Continua:"
 
-#: ../sgr-nextpage-titles.php:302
+#: ../sgr-nextpage-titles.php:241
+msgid "Contents"
+msgstr "Indice"
+
+#: ../sgr-nextpage-titles.php:256
 #, php-format
 msgid "Page %d:"
 msgstr "Pagina %d:"
 
-#: ../admin/settings-main.php:66
-msgid "Nextpage Titles Configuration"
-msgstr "Configurazione Nextpage Titles"
+#: ../sgr-nextpage-titles.php:265
+#, php-format
+msgid "Comments (%d)"
+msgstr "Commenti (%d)"
 
-#: ../admin/settings-main.php:116
-msgid "Nextpage Titles for WordPress Configuration"
-msgstr "Nextpage Titles per WordPress Configurazione"
+#: ../admin/settings-main.php:62 ../admin/settings-main.php:113
+msgid "Multipage Settings"
+msgstr "Impostazioni pagine multiple"
 
-#: ../admin/settings-main.php:148
-msgid "Summary appearance"
-msgstr "Aspetto del sommaro"
+#: ../admin/settings-main.php:152
+msgid "Comments"
+msgstr "Commenti"
 
-#: ../admin/settings-main.php:155
-msgid "Display only on the first page"
-msgstr "Visualizza solo sulla prima pagina"
+#: ../admin/settings-main.php:162
+msgid "Table of contents"
+msgstr "Indice"
 
-#: ../admin/settings-main.php:164
-msgid "Display page labels"
-msgstr "Visualizza numeri di pagina"
+#: ../admin/settings-main.php:169
+msgid "Only on the first page"
+msgstr "Solo sulla prima pagina"
 
-#: ../admin/settings-main.php:197
-msgid "Do you want to display the summary only on the first page of the post?"
-msgstr "Vuoi visualizzare il sommario solo sulla prima pagina del post?"
+#: ../admin/settings-main.php:196
+msgid "Hide header"
+msgstr "Nascondi l'header"
 
-#: ../admin/settings-main.php:215
-msgid "Do you want to display page labels before the page title?"
-msgstr "Vuoi visualizzare i numeri di pagina prima del titolo?"
+#: ../admin/settings-main.php:205
+msgid "Comments link"
+msgstr "Link ai commenti"
+
+#: ../admin/settings-main.php:242
+msgid "Show the comments only on the first page."
+msgstr "Visualizza i commenti solo sulla prima pagina."
+
+#: ../admin/settings-main.php:264
+msgid "Show the table of contents only on the first page of the post."
+msgstr "Mostra l'indice solo sulla prima pagina del post."
+
+#: ../admin/settings-main.php:308
+msgid "Display numbers before the subpage title."
+msgstr "Mostra numeri prima del titolo della sottopagina."
+
+#: ../admin/settings-main.php:309
+msgid "Display \"Page #\" before the subpage title."
+msgstr "Mostra \"Pagina #\" prima del titolo della sottopagina."
+
+#: ../admin/settings-main.php:310
+msgid "Hide subpage labels, display only the title."
+msgstr "Nascondi le etichette delle sottopagine, mostra solo il titolo."
+
+#: ../admin/settings-main.php:387
+msgid "Hide the table of contents header."
+msgstr "Nascondi l'header dell'indice."
+
+#: ../admin/settings-main.php:409
+msgid "Add a link for comments (only if comments are enabled)."
+msgstr "Aggiungi un link per i commenti (solo se sono abilitati)."
+
+#: ../admin/settings-main.php:482 ../admin/settings-main.php:522
+msgid "after the content"
+msgstr "dopo il contenuto"
+
+#: ../admin/settings-main.php:483 ../admin/settings-main.php:523
+msgid "before the content"
+msgstr "prima del contenuto"
+
+#: ../admin/settings-main.php:484 ../admin/settings-main.php:524
+msgid "hidden"
+msgstr "nascosto"

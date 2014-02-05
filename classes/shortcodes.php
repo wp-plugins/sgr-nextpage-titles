@@ -23,12 +23,8 @@ class Nextpage_Titles_Shortcodes {
 	 * @param string $content shortcode content. no effect
 	 */
 	public static function nextpage( $attributes, $content = null ) {
-		global $nextpage_titles_defaults;
-		
-		// Merge attributes and default options
-		$options = shortcode_atts( $nextpage_titles_defaults, $attributes );
 
-		return "<hr>";
+		return '<hr>';
 	}
 }
 ?>

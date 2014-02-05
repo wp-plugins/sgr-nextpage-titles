@@ -33,7 +33,7 @@ class Nextpage_Titles_Settings {
 	 * @return void
 	 */
 	public static function enqueue_scripts() {
-		wp_enqueue_style( 'sgr-admin-icons', plugins_url( 'static/css/admin/icons' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.css', dirname( __FILE__ ) ), array(), '1.5' );
+		wp_enqueue_style( 'multipage-admin', plugins_url( 'static/css/admin/multipage-admin' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.css', dirname( __FILE__ ) ), array(), '1.5' );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Nextpage_Titles_Settings {
 	 * @return void
 	 */
 	public static function settings_menu_item() {
-		global $nextpage_titles_loader, $submenu;
+		global $nextpage_titles_loader;
 		
 		// main settings page
 		if ( ! class_exists( 'Nextpage_Titles_Main_Settings' ) )
@@ -89,6 +89,7 @@ class Nextpage_Titles_Settings {
 		// place individual settings errors alongside their fields
 		//settings_errors( 'general' ); /* Commented because this displays two times settings saved */
 
+		echo '<div id="multipage-settings">';
 		echo '<form method="post" action="options.php">';
 
 		settings_fields( $page_slug );
@@ -96,6 +97,9 @@ class Nextpage_Titles_Settings {
 
 		submit_button();
 		echo '</form>';
+		echo '</div><!-- #multipage-settings-->';
+		echo '<div id="multipage-sidebar">';
+		echo '</div><!-- #multipage-sidebar-->';
 		echo '</div>';
 
 		/**

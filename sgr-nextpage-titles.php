@@ -5,19 +5,12 @@ Plugin Name: sGR Nextpage Titles
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
 Author: Sergio De Falco aka SGr33n
-Version: 0.94
+Version: 1.0
 Author URI: http://www.gonk.it/
 */
 
 register_activation_hook(__FILE__			, array('Nextpage_Titles_Loader', 'install_plugin'));									// Registering plugin activation hook.
 register_deactivation_hook( __FILE__		, array('Nextpage_Titles_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
-
-/**
- * Load the sGR Nextpage Title default option values
- *
- * @since 0.6
- */
-require_once( dirname(__FILE__) . '/config.php' ); 
 
 /**
  * Load the sGR Nextpage Title plugin
@@ -32,30 +25,12 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '0.9';
+	const VERSION = '0.95';
 	
-	/**
-	 * Do you want to display the summary only on the first page of the post?
-	 *
-	 * @since 0.93
-	 *
-	 * @var bool
-	 */
-	public $summary_oofp = false;
-	
-	/**
-	 * Do you want to display page labels in the summary?
-	 *
-	 * @since 0.93
-	 *
-	 * @var bool
-	 */
-	public $summary_page_labels = false;
-
 	/**
 	 * Let's get it started
 	 *
-	 * @since 0.6
+	 * @since 1.0
 	 */
 	public function __construct() {
 		// load plugin files relative to this directory
@@ -63,11 +38,7 @@ class Nextpage_Titles_Loader {
 
 		// Load the textdomain for translations
 		load_plugin_textdomain( 'sgr-npt', true, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-		// load sGR Nextpage Titles main settings		
-		$this->summary_oofp = (bool) get_option( 'npt_summary_oofp' );
-		$this->summary_page_labels = (bool) get_option( 'npt_summary_page_labels' );
-	
+		
 		// load shortcodes
 		if ( ! class_exists( 'Nextpage_Titles_Shortcodes' ) )
 			require_once( $this->plugin_directory . 'classes/shortcodes.php' );
@@ -94,7 +65,6 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 */
 	static function install_plugin() {
-		
 	}
 	
 	/**
@@ -103,68 +73,61 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 */
 	static function uninstall_plugin() {
-
 	}
 	
 	/**
 	 * Intialize the public.
 	 *
-	 * @since 0.6
+	 * @since 1.0
 	 */
 	public function public_init() {
 		// no need to process
 		if ( is_feed() || is_404() )
 			return;
-		
-		global $post, $post_pages;
+			
+		global $post;
 
 		// Variables
 		$page = get_query_var('page');
 		$content = $post->post_content;
-		$temp_content = $content;
 		$pattern = "/\[nextpage[^\]]*\]/";
-		$post_pages = array();
+		$post_subpages = array();
 		$p = 0;
-		
+
 		preg_match_all($pattern, $content, $matches);
-		foreach ($matches[0] as $match) {
+		foreach ( $matches[0] as $match ) {
 			// Check if the intro has a Title
-			if ( 0 == $p ) :
-				if ( 0 != strpos( $content, $match ) ) :
-					$post_pages[] = __( 'Intro', 'sgr-npt' );
-					$current_title = $this->get_nextpage_title( $match, $p );
-					$p++;
-				else :
-					$current_title = $this->get_nextpage_title( $match, $p );
-					$temp_content = str_replace( $match, '', $content );
-				endif;
+			if ( 0 == $p && 0 != strpos( $content, $match ) ) :
+				$post_subpages[] = __( 'Intro', 'sgr-npt' );
+				$current_title = $this->get_subpage_title( $match, $p );
+				$p++;
 			else :
-				$current_title = $this->get_nextpage_title( $match, $p );
+				$current_title = $this->get_subpage_title( $match, $p );
 			endif;
 		
-			$post_pages[] = $current_title;			
+			$post_subpages[] = $current_title;			
 			$p++;
 		}
 		
-		// If the requested page doesn't exist (even if there is a declared page=1 variable)
-		if ( $page == 1 || $page > $p ) {
-
-			// Return 404 page
-			$this->return_404();
-
-		}
-
-		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $temp_content );
-		
-		// If there aren't subpages or it's a loop, exit
-		// Use is_singular because it looks for every post
-		if ( empty($post_pages) || ( ! is_singular() ) )
+		// If there aren't subpages or it's a loop, exit.
+		// Use is_singular because it looks for every post.
+		if ( empty( $post_subpages ) )
 			return;
 		
-		add_action( 'wp_enqueue_scripts', array( 'Nextpage_Titles_Loader', 'enqueue_styles' ) );
-		add_filter( 'wp_link_pages_args', 'sgrnpt_next_prev' );
-		add_filter( 'the_content', 'add_to_the_content', 10 );
+		// If the requested page doesn't exist (even if there is a declared page=1 variable).
+		// return 404.
+		if ( $page == 1 || $page > $p )
+			$this->return_404();
+		
+		// Update $post Object with new data.
+		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $content );
+		$post->post_subpages = $post_subpages;
+		
+		add_action( 'wp_enqueue_scripts',	array( &$this, 'enqueue_styles' ) );
+		add_filter( 'wp_link_pages_args',	array( &$this, 'hide_standard_pagination' ) );
+		add_filter( 'the_content', 			array( &$this, 'enhance_content' ) );
 	}
+	
 	
 	/**
 	 * Initialize the backend
@@ -178,32 +141,6 @@ class Nextpage_Titles_Loader {
 		if ( ! class_exists( 'Nextpage_Titles_Settings' ) )
 			require_once( $admin_dir . 'settings.php' );
 		Nextpage_Titles_Settings::init();
-	}
-		
-	/**
-	 * Retrieve the subpage title. If it has no title, use a generic one.
-	 *
-	 * @since 0.6
-	 */
-	private function get_nextpage_title($code, $pagen) {
-		$pattern = '/title=(["\'])(.*?)\1/';
-		$count = preg_match($pattern, $code, $matches);
-		if ($count)
-			return $matches[2];
-		else
-			return __( 'Page ', 'sgr-npt' ) . $pagen;
-	}
-	
-	/**
-	 * Return a 404 page.
-	 *
-	 * @since 0.9
-	 */
-	private function return_404() {
-		global $wp_query;
-		
-		$wp_query->set_404();
-		status_header(404);
 	}
 	
 	/**
@@ -239,103 +176,154 @@ class Nextpage_Titles_Loader {
 		// Enqueue the sGR NextPage Titles styling
 		wp_enqueue_style( $handle, $location . $file, array(), self::VERSION, 'screen' );
 	}
-	
+		
 	/**
-	 * Enable rewrite rule for paget query var	 
+	 * Retrieve the subpage title. If it has no title, use a generic one.
 	 *
 	 * @since 0.6
 	 */
-	public function add_paget_rewrite_rule() {
-		//add_rewrite_rule( '(.?.+?)(/subpage-[^/]+)?/?$', 'index.php?name=$matches[1]&paget=$matches[2]', 'top'); /* for pages */
-		//add_rewrite_rule( '([0-9]{4})/([0-9]{1,2})/([^/]+)(/subpage-[^/]+)?/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&name=$matches[3]&paget=$matches[4]', 'top');
-		//add_rewrite_rule( '([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/([^/]+)(/subpage-[^/]+)?/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&name=$matches[4]&paget=$matches[5]', 'top');
-	}
-}
-
-/**
- * Add the subpages summary and other stuff to the_content.
- *
- * @since 0.6
- */
-function add_to_the_content( $content ) {
-	
-	// Summary should not be the only content in the post
-	if ( ! $content )
-		return $content;
-	
-	global $nextpage_titles_loader, $post, $post_pages;
-	
-	$p = 0;
-	$subtitle = '';
-	$summary = '';
-	$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
-	
-	// Add subtitle to the page
-	if ( $page > 1 )
-		$subtitle = '<h2 class="entry-subtitle">' . $post_pages[ $page -1 ] . '</h2>';
-
-	if ( $page === count( $post_pages ) ) :
-		$navlink = '
-			<div class="back-link">' . __( 'End: ', 'sgr-npt' ) . ' <a href="' . get_permalink( $post->ID ) . '">' . __( 'Back to index', 'sgr-npt' ) . '</a></div>';
-	else :
-		$navlink = '
-			<div class="continue-link">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . get_pagetitle_link( $post->ID, $page +1, $post_pages[ $page ] ) . '">' . $post_pages[ $page ] .'</a></div>';
-	endif;
-	
-	if ( $nextpage_titles_loader->summary_oofp == false || ( $page == 1 ) ) {
-		
-		$summary = '
-			<ul id="sgr-npt-summary-' . $post->ID . '" class="sgr-npt-summary">';
-
-		foreach ($post_pages as $match) {
-		
-			if ( $p == $page ) :
-				$liclass = " selected";
-			else :
-				$liclass = "";
-			endif;
-			
-			$p++;
-			$summary .= '
-				<li class="subpage-' . $p . $liclass . '">';
-				
-			if ( $nextpage_titles_loader->summary_page_labels == true )
-				$summary .= '<span>' . sprintf( __( 'Page %d:', 'sgr-npt' ), $p ) . '</span>';
-				
-			$summary .= '
-					<a href="' . get_pagetitle_link( $post->ID, $p, $post_pages[ $p -1 ] ) . '">' . $match . '</a></li>';
+	private function get_subpage_title( $code, $page ) {
+		$pattern = '/title=(["\'])(.*?)\1/';
+		$count = preg_match( $pattern, $code, $matches );
+		if ( $count ) {
+			return $matches[2];
 		}
-
-		$summary .= '</ul><!-- #sgr-npt-summary-' . $post->ID . '-->';
-	
+		else {
+			return sprintf( __( 'Page %d', 'sgr-npt' ), $page +1);
+		}
+		return;
 	}
 
-	// Return the content
-	return $subtitle . $content . $navlink . $summary;
-}
+	/**
+	 * Add the subpages summary and other stuff to the_content.
+	 *
+	 * @since 1.0
+	 */
+	public function enhance_content( $content ) {
+		global $post;
+		
+		// Table of contents should not be the only content in the post.
+		if ( ! $content )
+			return $content;
+			
+		if ( ! is_singular() )
+			return $content;
+			
+		// Get options.
+		$options = get_option( 'multipage' );
+		if ( ! is_array( $options ) )
+			$options = array();
+			
+		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
+		
+		// If not the first page, hide comments.
+		if ( $page != 1 && $options['comments-oofp'] )
+			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
 
-function get_pagetitle_link( $postid, $pagenum = 1, $paget = '' ) {
-	$base = get_permalink( $postid );
+		$subpages = $post->post_subpages;
+		$subtitle = '<h2 class="entry-subtitle">' . $subpages[ $page -1 ] . '</h2>';
+		if ( $page === count( $subpages ) ) {
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages[ 0 ] . '</a></div>';
+		} else {
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages[ $page ] .'</a></div>';
+		}
+		
+		$enhanced_content = $subtitle . $content . $multipagenav;
 
-	// If it's the first page the link is the base permalink
-	if ( $pagenum < 2 )
-		return $base;
+		if ( ! $options['toc-oofp'] || $page == 1 ) {
+		
+			$toc = '<ul id="multipage-toc-' . $post->ID . '" class="multipage-toc">';
+			if ( ! $options['toc-hide-header'] )					
+				$toc .= '<li class="toc-header">' . __( 'Contents', 'sgr-npt' ) . '</li>';
+						
+			foreach ( $subpages as $c => $match ) {
+				
+				$current = $c +1;
+				$toc .= '<li class="subpage-' . $current;
+				if ( $current == $page )
+					$toc .= ' current';
+				$toc .= '">';
+				
+				// Subpage label.
+				if ( $options['toc-page-labels'] === 'numbers' ) {
+					$toc .= '<span class="numbers">' . $current . '. </span> ';	
+				}
+				elseif ( $options['toc-page-labels'] === 'pages' ) {
+					$toc .= '<span class="pages">' . sprintf( __( 'Page %d:', 'sgr-npt' ), $current ) . '</span> ';
+				}
+				
+				// Subpage link.
+				$toc .= '<a href="' . $this->get_subpage_link( $current ) . '">' . $match . '</a></li>';
+			}
+		
+			// If comments are open add the link to the table of contents.
+			if ( comments_open() && $options['toc-comments-link'] )		
+				$toc .= '<li class="toc-footer"><a href="' . get_comments_link()  . '">' . sprintf( __( 'Comments (%d)', 'sgr-npt' ), get_comments_number() ) . '</a></li>';
+				
+			$toc .= '</ul><!-- #multipage-toc-' . $post->ID . '-->';
+			
+			if ( $options['toc-position'] === 'top' ) {
+				$enhanced_content = $toc . $enhanced_content;
+			}
+			elseif ( $options['toc-position'] === 'bottom' ) {
+				$enhanced_content .= $toc;
+			}
+		}
+		
+		return $enhanced_content;
+	}
 	
-	if ( ! get_option('permalink_structure') || is_admin() || true == get_query_var('preview') )
-		// return add_query_arg( array('paget' => sanitize_title($paget) ), $base );
-		return add_query_arg( array('page' => $pagenum) ); /* this is if you want number instead of pretty links */
-	
-	return trailingslashit( $base ) . user_trailingslashit( $pagenum, 'page' );
-}
+	/**
+	 * Retrieve the subpage permalink.
+	 *
+	 * @since 1.0
+	 */
+	private function get_subpage_link( $page ) {
+		$base = get_permalink();
 
-/**
- * Hide the standard pagination.
- *
- * @since 0.6
- */
-function sgrnpt_next_prev($args) {
-	$args['echo'] = 0;
-	return $args;
+		// If it's the first page the link is the base permalink
+		if ( $page < 2 )
+			return $base;
+		
+		if ( ! get_option('permalink_structure') || is_admin() || true == get_query_var('preview') )
+			return add_query_arg( array('page' => $page ) );
+		
+		$subpage_link = trailingslashit( $base ) . user_trailingslashit( $page, 'page' );
+		return $subpage_link;
+	}
+
+	/**
+	 * Return a 404 page.
+	 *
+	 * @since 0.9
+	 */
+	private function return_404() {
+		global $wp_query;
+		
+		$wp_query->set_404();
+		status_header(404);
+		return;
+	}
+	
+	/**
+	 * Hide the standard pagination.
+	 *
+	 * @since 0.6
+	 */
+	public static function hide_standard_pagination( $args ) {
+		$args['echo'] = 0;
+		return $args;
+	}
+	
+	/**
+	 * Hide comments area.
+	 *
+	 * @since 1.0
+	 */
+	function hide_comments() {
+		// Return an empty file.
+		return dirname( __FILE__ ) . '/index.php';
+	}
 }
 
 /**
