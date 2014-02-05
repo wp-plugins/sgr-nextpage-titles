@@ -9,7 +9,6 @@ Tested up to: 3.8
 Stable tag: 1.0
 
 Order your posts into subpages: multipage posts will have a table of contents linking single subpages with their titles.
-Make order in your posts. Have multipage posts and a table of contents linking subpages using sGR Nextpage Titles.
 
 == Description ==
 
