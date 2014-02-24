@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SGR Nextpage Titles Plugin for Wordpress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-04 18:46+0100\n"
-"PO-Revision-Date: 2014-02-04 18:46+0100\n"
+"POT-Creation-Date: 2014-02-04 12:42+0100\n"
+"PO-Revision-Date: 2014-02-04 12:42+0100\n"
 "Last-Translator: Sergio De Falco <sgr33n@ircaserta.com>\n"
 "Language-Team: SGr33n <sgr33n@ircaserta.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,29 +18,21 @@ msgstr ""
 msgid "Intro"
 msgstr ""
 
-#: ../sgr-nextpage-titles.php:197
+#: ../sgr-nextpage-titles.php:200
 #, php-format
 msgid "Page %d"
 msgstr ""
 
-#: ../sgr-nextpage-titles.php:230
-msgid "Back to: "
-msgstr ""
-
-#: ../sgr-nextpage-titles.php:232
-msgid "Continue:"
-msgstr ""
-
-#: ../sgr-nextpage-titles.php:241
+#: ../sgr-nextpage-titles.php:220
 msgid "Contents"
 msgstr ""
 
-#: ../sgr-nextpage-titles.php:256
+#: ../sgr-nextpage-titles.php:231
 #, php-format
 msgid "Page %d:"
 msgstr ""
 
-#: ../sgr-nextpage-titles.php:265
+#: ../sgr-nextpage-titles.php:239
 #, php-format
 msgid "Comments (%d)"
 msgstr ""
@@ -49,62 +41,54 @@ msgstr ""
 msgid "Multipage Settings"
 msgstr ""
 
-#: ../admin/settings-main.php:152
-msgid "Comments"
-msgstr ""
-
-#: ../admin/settings-main.php:162
+#: ../admin/settings-main.php:145
 msgid "Table of contents"
 msgstr ""
 
-#: ../admin/settings-main.php:169
+#: ../admin/settings-main.php:152
 msgid "Only on the first page"
 msgstr ""
 
-#: ../admin/settings-main.php:196
+#: ../admin/settings-main.php:179
 msgid "Hide header"
 msgstr ""
 
-#: ../admin/settings-main.php:205
+#: ../admin/settings-main.php:188
 msgid "Comments link"
 msgstr ""
 
-#: ../admin/settings-main.php:242
-msgid "Show the comments only on the first page."
-msgstr ""
-
-#: ../admin/settings-main.php:264
+#: ../admin/settings-main.php:225
 msgid "Show the table of contents only on the first page of the post."
 msgstr ""
 
-#: ../admin/settings-main.php:308
+#: ../admin/settings-main.php:269
 msgid "Display numbers before the subpage title."
 msgstr ""
 
-#: ../admin/settings-main.php:309
+#: ../admin/settings-main.php:270
 msgid "Display \"Page #\" before the subpage title."
 msgstr ""
 
-#: ../admin/settings-main.php:310
+#: ../admin/settings-main.php:271
 msgid "Hide subpage labels, display only the title."
 msgstr ""
 
-#: ../admin/settings-main.php:387
+#: ../admin/settings-main.php:348
 msgid "Hide the table of contents header."
 msgstr ""
 
-#: ../admin/settings-main.php:409
+#: ../admin/settings-main.php:370
 msgid "Add a link for comments (only if comments are enabled)."
 msgstr ""
 
-#: ../admin/settings-main.php:482 ../admin/settings-main.php:522
+#: ../admin/settings-main.php:436 ../admin/settings-main.php:476
 msgid "after the content"
 msgstr ""
 
-#: ../admin/settings-main.php:483 ../admin/settings-main.php:523
+#: ../admin/settings-main.php:437 ../admin/settings-main.php:477
 msgid "before the content"
 msgstr ""
 
-#: ../admin/settings-main.php:484 ../admin/settings-main.php:524
+#: ../admin/settings-main.php:438 ../admin/settings-main.php:478
 msgid "hidden"
 msgstr ""
