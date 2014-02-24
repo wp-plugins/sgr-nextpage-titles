@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SGR Nextpage Titles Plugin for Wordpress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-04 18:46+0100\n"
-"PO-Revision-Date: 2014-02-04 23:52+0100\n"
+"POT-Creation-Date: 2014-02-03 17:28+0100\n"
+"PO-Revision-Date: 2014-02-04 12:43+0100\n"
 "Last-Translator: Sergio De Falco <sgr33n@ircaserta.com>\n"
 "Language-Team: SGr33n <sgr33n@ircaserta.com>\n"
 "MIME-Version: 1.0\n"
@@ -12,106 +12,94 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
 "X-Poedit-Basepath: .\n"
 "X-Generator: Poedit 1.6.3\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: de_DE\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../sgr-nextpage-titles.php:102
+#: ../sgr-nextpage-titles.php:131
 msgid "Intro"
 msgstr "Anfang"
 
-#: ../sgr-nextpage-titles.php:197
-#, php-format
-msgid "Page %d"
-msgstr "Seite %d"
+#: ../sgr-nextpage-titles.php:191
+msgid "Page "
+msgstr "Seite"
 
-#: ../sgr-nextpage-titles.php:230
-msgid "Back to: "
-msgstr "Zurück zu:"
+#: ../sgr-nextpage-titles.php:276
+msgid "End: "
+msgstr "Ende:"
 
-#: ../sgr-nextpage-titles.php:232
+#: ../sgr-nextpage-titles.php:276
+msgid "Back to index"
+msgstr "Zurück zum Anfang"
+
+#: ../sgr-nextpage-titles.php:279
 msgid "Continue:"
 msgstr "Weiter:"
 
-#: ../sgr-nextpage-titles.php:241
+#: ../sgr-nextpage-titles.php:286
 msgid "Contents"
 msgstr "Inhaltsverzeichnis"
 
-#: ../sgr-nextpage-titles.php:256
+#: ../sgr-nextpage-titles.php:301
 #, php-format
 msgid "Page %d:"
 msgstr "Seite %d:"
 
-#: ../sgr-nextpage-titles.php:265
-#, php-format
-msgid "Comments (%d)"
-msgstr "Kommentare (%d)"
+#: ../sgr-nextpage-titles.php:309
+msgid "Comments"
+msgstr "Kommentare"
 
 #: ../admin/settings-main.php:62 ../admin/settings-main.php:113
 msgid "Multipage Settings"
 msgstr "Einstellungen > Multipage"
 
-#: ../admin/settings-main.php:152
-msgid "Comments"
-msgstr "Kommentare"
-
-#: ../admin/settings-main.php:162
+#: ../admin/settings-main.php:145
 msgid "Table of contents"
 msgstr "Inhaltsverzeichnis"
 
-#: ../admin/settings-main.php:169
+#: ../admin/settings-main.php:152
 msgid "Only on the first page"
 msgstr "Nur auf der ersten Seite"
 
-#: ../admin/settings-main.php:196
+#: ../admin/settings-main.php:179
 msgid "Hide header"
-msgstr "Überschrift nicht anzeigen"
+msgstr "Titel nicht anzeigen"
 
-#: ../admin/settings-main.php:205
+#: ../admin/settings-main.php:188
 msgid "Comments link"
-msgstr "Link zu den Kommentaren"
+msgstr "Kommentar Link"
 
-#: ../admin/settings-main.php:242
-msgid "Show the comments only on the first page."
-msgstr "Kommentare nur auf der ersten Seite anzeigen."
-
-#: ../admin/settings-main.php:264
+#: ../admin/settings-main.php:225
 msgid "Show the table of contents only on the first page of the post."
 msgstr "Das Inhaltsverzeichnis nur auf der ersten Seite anzeigen."
 
-#: ../admin/settings-main.php:308
+#: ../admin/settings-main.php:269
 msgid "Display numbers before the subpage title."
-msgstr "Seitenzahl vor der Überschrift anzeigen."
+msgstr "Seitenzahl vor der Überschrift der Unterseite anzeigen."
 
-#: ../admin/settings-main.php:309
-msgid "Display \"Page #\" before the subpage title."
-msgstr "\"Seite #:\" Vor der Überschrift anzeigen."
+#: ../admin/settings-main.php:270
+msgid "Display pages before the subpage title."
+msgstr "Seiten vor der Überschrift der Unterseite anzeigen."
 
-#: ../admin/settings-main.php:310
-msgid "Hide subpage labels, display only the title."
-msgstr "Keine Seitenzahlen vor der Überschrift anzeigen."
+#: ../admin/settings-main.php:271
+msgid "Hide page labels, display only the subpage title."
+msgstr "Nur die Überschrift der Unterseite anzeigen (ohne Seitenzahl)."
 
-#: ../admin/settings-main.php:387
+#: ../admin/settings-main.php:348
 msgid "Hide the table of contents header."
 msgstr "Überschrift des Inhaltsverzeichnisses nicht anzeigen."
 
-#: ../admin/settings-main.php:409
+#: ../admin/settings-main.php:370
 msgid "Add a link for comments (only if comments are enabled)."
-msgstr ""
-"Einen Link zu den Kommentaren hinzufügen (Nur wenn Kommentare aktiviert "
-"sind)."
+msgstr "Einen Link zu den Kommentaren anzeigen (wenn diese aktiviert sind)."
 
-#: ../admin/settings-main.php:482 ../admin/settings-main.php:522
+#: ../admin/settings-main.php:436 ../admin/settings-main.php:476
 msgid "after the content"
-msgstr "Nach dem Inhalt"
+msgstr "Nach den Kommentaren"
 
-#: ../admin/settings-main.php:483 ../admin/settings-main.php:523
+#: ../admin/settings-main.php:437 ../admin/settings-main.php:477
 msgid "before the content"
 msgstr "Vor dem Inhalt"
 
-#: ../admin/settings-main.php:484 ../admin/settings-main.php:524
+#: ../admin/settings-main.php:438 ../admin/settings-main.php:478
 msgid "hidden"
-msgstr "Nicht angezeigt"
-
-msgid "Page labels"
-msgstr "Seitenzahlen"
+msgstr "versteckt"
