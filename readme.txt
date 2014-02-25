@@ -1,4 +1,4 @@
-=== sGR Nextpage Titles ===
+=== Multipage Plugin ===
 Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
 License: GPLv3
@@ -12,7 +12,7 @@ Order your posts into subpages: multipage posts will have a table of contents li
 
 == Description ==
 
-sGR Nextpage Titles is a WordPress plugin that will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
+Multipage Plugin for WordPress will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
 
 = Make order in your posts! =
 Forget about too long posts, infinite height pages, diffculty to found a post section. With sGR Nextpage Titles you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the desidered subpage of the post.
