@@ -4,7 +4,7 @@
  *
  * @since 0.6
  */
-class Nextpage_Titles_Shortcodes {
+class Multipage_Plugin_Shortcodes {
 
 	/**
 	 * Register shortcode handlers
@@ -12,7 +12,7 @@ class Nextpage_Titles_Shortcodes {
 	 * @since 1.1
 	 */
 	public static function init() {
-		add_shortcode( 'nextpage', array( 'Nextpage_Titles_Shortcodes', 'nextpage' ) );
+		add_shortcode( 'nextpage', array( 'Multipage_Plugin_Shortcodes', 'nextpage' ) );
 	}
 	
 	/**

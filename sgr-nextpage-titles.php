@@ -1,23 +1,23 @@
 <?php
 
 /*
-Plugin Name: sGR Nextpage Titles
+Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
-Description: A plugin that replaces (but not disables) the <code>&lt;!--nextpage--&gt;</code> code and gives the chance to have subtitles for your post subpages. You will have also an index, reporting all subpages. 
+Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.0.1
+Version: 1.1
 Author URI: http://www.gonk.it/
 */
 
-register_activation_hook(__FILE__			, array('Nextpage_Titles_Loader', 'install_plugin'));									// Registering plugin activation hook.
-register_deactivation_hook( __FILE__		, array('Nextpage_Titles_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
+register_activation_hook(__FILE__			, array('Multipage_Plugin_Loader', 'install_plugin'));									// Registering plugin activation hook.
+register_deactivation_hook( __FILE__		, array('Multipage_Plugin_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
 
 /**
- * Load the sGR Nextpage Title plugin
+ * Load the Multipage Plugin
  *
  * @since 0.6
  */
-class Nextpage_Titles_Loader {
+class Multipage_Plugin_Loader {
 	/**
 	 * Uniquely identify plugin version
 	 * Bust caches based on this value
@@ -25,7 +25,7 @@ class Nextpage_Titles_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.1';
 	
 	/**
 	 * Store Multipage default settings.
@@ -49,9 +49,9 @@ class Nextpage_Titles_Loader {
 		load_plugin_textdomain( 'sgr-npt', true, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		
 		// load shortcodes
-		if ( ! class_exists( 'Nextpage_Titles_Shortcodes' ) )
+		if ( ! class_exists( 'Multipage_Plugin_Shortcodes' ) )
 			require_once( $this->plugin_directory . 'classes/shortcodes.php' );
-		Nextpage_Titles_Shortcodes::init();
+		Multipage_Plugin_Shortcodes::init();
 		
 		if ( is_admin() ) {
 			$this->admin_init();
@@ -134,7 +134,8 @@ class Nextpage_Titles_Loader {
 		
 		add_action( 'wp_enqueue_scripts',	array( &$this, 'enqueue_styles' ) );
 		add_filter( 'wp_link_pages_args',	array( &$this, 'hide_standard_pagination' ) );
-		add_filter( 'the_content', 			array( &$this, 'enhance_content' ) );
+		add_filter( 'wp_title',				array( &$this, 'enhance_title' ));
+		add_filter( 'the_content', 			array( &$this, 'enhance_content' ), 20 );
 	}
 	
 	
@@ -146,10 +147,10 @@ class Nextpage_Titles_Loader {
 	public function admin_init() {
 		$admin_dir = $this->plugin_directory . 'admin/';
 
-		// sGR NextPage Titles settings loader
-		if ( ! class_exists( 'Nextpage_Titles_Settings' ) )
+		// Multipage Plugin settings loader
+		if ( ! class_exists( 'Multipage_Plugin_Settings' ) )
 			require_once( $admin_dir . 'settings.php' );
-		Nextpage_Titles_Settings::init();
+		Multipage_Plugin_Settings::init();
 	}
 	
 	/**
@@ -161,7 +162,7 @@ class Nextpage_Titles_Loader {
 	public static function enqueue_styles() {
 	
 		// LTR or RTL
-		$file = is_rtl() ? 'static/css/nextpagetitles-rtl' : 'static/css/nextpagetitles';
+		$file = is_rtl() ? 'static/css/multipage-rtl' : 'static/css/multipage';
 		
 		// Minimized version or not
 		$file .= ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ) . '.css';
@@ -169,20 +170,20 @@ class Nextpage_Titles_Loader {
 		// Check child theme
 		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $file ) ) {
 			$location = trailingslashit( get_stylesheet_directory_uri() );
-			$handle   = 'child-nextpage-titles';
+			$handle   = 'child-multipage';
 
 		// Check parent theme
 		} elseif ( file_exists( trailingslashit( get_template_directory() ) . $file ) ) {
 			$location = trailingslashit( get_template_directory_uri() );
-			$handle   = 'parent-nextpage-titles';
+			$handle   = 'parent-multipage';
 
-		// sGR NextPage Titles Theme Compatibility
+		// Multipage Plugin Theme Compatibility
 		} else {
 			$location = trailingslashit( plugin_dir_url( __FILE__ ) );
-			$handle   = 'default-nextpage-titles';
+			$handle   = 'default-multipage';
 		}
 
-		// Enqueue the sGR NextPage Titles styling
+		// Enqueue the Multipage Plugin styling
 		wp_enqueue_style( $handle, $location . $file, array(), self::VERSION, 'screen' );
 	}
 		
@@ -191,7 +192,7 @@ class Nextpage_Titles_Loader {
 	 *
 	 * @since 0.6
 	 */
-	private function get_subpage_title( $code, $page ) {
+	public function get_subpage_title( $code, $page ) {
 		$pattern = '/title=(["\'])(.*?)\1/';
 		$count = preg_match( $pattern, $code, $matches );
 		if ( $count ) {
@@ -201,6 +202,28 @@ class Nextpage_Titles_Loader {
 			return sprintf( __( 'Page %d', 'sgr-npt' ), $page +1);
 		}
 		return;
+	}
+	
+	/**
+	 * Add the subpages summary and other stuff to the_content.
+	 *
+	 * @since 1.0
+	 */
+	public function enhance_title( $title ) {
+		global $post;
+		
+		// Get the page number
+		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
+		
+		// If it is the the first page.
+		if ( $page <= 1 )
+			return $title;
+
+		$subpages = $post->post_subpages;
+		$subpage_title = $subpages[ $page -1 ];
+		$title = str_replace( 'Page ' . $page, $subpage_title, $title );					// Maybe it doesn't work with translations. Please check.
+		
+		return $title;		
 	}
 
 	/**
@@ -218,11 +241,15 @@ class Nextpage_Titles_Loader {
 		if ( ! is_singular() )
 			return $content;
 			
+		if ( ! property_exists( $post, 'post_subpages' ) )
+           return $content;
+			
 		// Get options with default values.
 		$options = get_option( 'multipage', $this->multipage_settings_defaults );
 		if ( ! is_array( $options ) )
 			$options = array();
 			
+		// Get the page number.
 		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 		
 		// If not the first page, hide comments.
@@ -231,11 +258,16 @@ class Nextpage_Titles_Loader {
 
 		$subpages = $post->post_subpages;
 		$subtitle = '<h2 class="entry-subtitle">' . $subpages[ $page -1 ] . '</h2>';
+		
+		add_filter( 'multipage_subtitle', function( $subtitle ) { return $subtitle; } );
+		
 		if ( $page === count( $subpages ) ) {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages[ 0 ] . '</a></div>';
 		} else {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages[ $page ] .'</a></div>';
 		}
+		
+		add_filter( 'multipage_navigation', function( $multipagenav ) { return $multipagenav; } );
 		
 		$enhanced_content = $subtitle . $content . $multipagenav;
 
@@ -277,8 +309,10 @@ class Nextpage_Titles_Loader {
 			elseif ( $options['toc-position'] === 'bottom' ) {
 				$enhanced_content .= $toc;
 			}
+			
+			add_filter( 'multipage_content', function( $content ) { return $content; } );
 		}
-		
+
 		return $enhanced_content;
 	}
 	
@@ -340,9 +374,9 @@ class Nextpage_Titles_Loader {
  *
  * @since 0.6
  */
-function nextpage_titles_loader_init() {
-	global $nextpage_titles_loader;
+function multipage_plugin_loader_init() {
+	global $multipage_plugin_loader;
 
-	$nextpage_titles_loader = new Nextpage_Titles_Loader();
+	$multipage_plugin_loader = new Multipage_Plugin_Loader();
 }
-add_action( 'init', 'nextpage_titles_loader_init', 0 ); // load before widgets_init at 1
+add_action( 'init', 'multipage_plugin_loader_init', 0 ); // load before widgets_init at 1

@@ -5,7 +5,7 @@
  *
  * @since 0.93
  */
-class Nextpage_Titles_Main_Settings {
+class Multipage_Plugin_Main_Settings {
 	/**
 	 * Settings page identifier.
 	 *
@@ -56,7 +56,7 @@ class Nextpage_Titles_Main_Settings {
 	 * @return string page hook
 	 */
 	public static function menu_item() {
-		$main_settings = new Nextpage_Titles_Main_Settings();
+		$main_settings = new Multipage_Plugin_Main_Settings();
 
 		$hook_suffix = add_options_page(
 			__( 'Multipage Settings', 'sgr-npt' ), // page <title>
@@ -70,7 +70,7 @@ class Nextpage_Titles_Main_Settings {
 		// conditional load CSS, scripts
 		if ( $hook_suffix ) {
 			$main_settings->hook_suffix = $hook_suffix;
-			register_setting( $hook_suffix, self::OPTION_NAME, array( 'Nextpage_Titles_Main_Settings', 'sanitize_options' ) );
+			register_setting( $hook_suffix, self::OPTION_NAME, array( 'Multipage_Plugin_Main_Settings', 'sanitize_options' ) );
 			add_action( 'load-' . $hook_suffix, array( &$main_settings, 'onload' ) );
 		}
 
@@ -92,8 +92,6 @@ class Nextpage_Titles_Main_Settings {
 		$this->existing_options = $options;
 		
 		$this->settings_api_init();
-
-		//add_action( 'admin_enqueue_scripts', array( 'Facebook_Application_Settings', 'enqueue_scripts' ) );
 		
 	}
 	
@@ -108,7 +106,7 @@ class Nextpage_Titles_Main_Settings {
 		if ( ! isset( $this->hook_suffix ) )
 			return;
 
-		add_action( 'nextpage_titles_settings_after_header_' . $this->hook_suffix, array( 'Nextpage_Titles_Main_Settings', 'after_header' ) );
+		add_action( 'nextpage_titles_settings_after_header_' . $this->hook_suffix, array( 'Multipage_Plugin_Main_Settings', 'after_header' ) );
 
 		Nextpage_Titles_Settings::settings_page_template( $this->hook_suffix, __( 'Multipage Settings', 'sgr-npt' ) );
 	}
