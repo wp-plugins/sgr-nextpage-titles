@@ -5,7 +5,7 @@ Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.1
+Version: 1.1.1
 Author URI: http://www.gonk.it/
 */
 
@@ -25,7 +25,7 @@ class Multipage_Plugin_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.1.1';
 	
 	/**
 	 * Store Multipage default settings.
@@ -259,7 +259,7 @@ class Multipage_Plugin_Loader {
 		$subpages = $post->post_subpages;
 		$subtitle = '<h2 class="entry-subtitle">' . $subpages[ $page -1 ] . '</h2>';
 		
-		add_filter( 'multipage_subtitle', function( $subtitle ) { return $subtitle; } );
+		add_filter( 'multipage_subtitle', 'return_multipage_subtitle' );
 		
 		if ( $page === count( $subpages ) ) {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages[ 0 ] . '</a></div>';
@@ -267,7 +267,7 @@ class Multipage_Plugin_Loader {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages[ $page ] .'</a></div>';
 		}
 		
-		add_filter( 'multipage_navigation', function( $multipagenav ) { return $multipagenav; } );
+		add_filter( 'multipage_navigation', 'return_multipage_navigation' );
 		
 		$enhanced_content = $subtitle . $content . $multipagenav;
 
@@ -310,7 +310,7 @@ class Multipage_Plugin_Loader {
 				$enhanced_content .= $toc;
 			}
 			
-			add_filter( 'multipage_content', function( $content ) { return $content; } );
+			add_filter( 'multipage_content', 'return_multipage_content' );
 		}
 
 		return $enhanced_content;
@@ -333,6 +333,36 @@ class Multipage_Plugin_Loader {
 		
 		$subpage_link = trailingslashit( $base ) . user_trailingslashit( $page, 'page' );
 		return $subpage_link;
+	}
+
+	/**
+	 * Return Subpage Title.
+	 *
+	 * @since 1.1.1
+	 */
+	public function return_multipage_subtitle( $subtitle ) {
+		
+		return $subtitle;
+	}
+
+	/**
+	 * Return Multipage Navigation.
+	 *
+	 * @since 1.1.1
+	 */
+	public function return_multipage_navigation( $multipagenav ) {
+		
+		return $multipagenav;
+	}
+	
+	/**
+	 * Return Subpage Content.
+	 *
+	 * @since 1.1.1
+	 */
+	public function return_multipage_content( $content ) {
+		
+		return $content;
 	}
 
 	/**
