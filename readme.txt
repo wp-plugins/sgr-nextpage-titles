@@ -43,6 +43,10 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 
 = 1.1.2 =
 * Bug fix:
+	* Fixed settings page.
+
+= 1.1.1 =
+* Bug fix:
 	* Fixed incompatibility with servers running php < 5.3.
 
 = 1.1 =
