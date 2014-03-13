@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 1.0.1
+Stable tag: 1.1.1
 
 Order your posts into subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -40,6 +40,10 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 3. The configuration page placed under "Settings > Multipage".
 
 == Changelog ==
+
+= 1.1.1 =
+* Bug fix:
+	* Fixed incompatibility with servers running php < 5.3.
 
 = 1.1 =
 * New Features:
