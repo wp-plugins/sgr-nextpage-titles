@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 1.1.2
+Stable tag: 1.1.4
 
 Order your posts into subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -41,6 +41,14 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 1.1.4 =
+* Enhancements:
+	* Tag Title now works also in conjunction with WordPress SEO by Yoast. The variable to show the subtitle is the standard `%%page%%`.
+
+= 1.1.3 =
+* Bug fix:
+	* Tag Title should work also on non English WordPress installations (please report on the support forum if don't).
+	
 = 1.1.2 =
 * Bug fix:
 	* Fixed settings page.
