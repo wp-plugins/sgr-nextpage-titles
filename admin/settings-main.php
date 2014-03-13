@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Display a settings page for sGR Nextpage Titles
+ * Display a settings page for Multipage Plugin
  *
  * @since 0.93
  */
@@ -108,7 +108,7 @@ class Multipage_Plugin_Main_Settings {
 
 		add_action( 'nextpage_titles_settings_after_header_' . $this->hook_suffix, array( 'Multipage_Plugin_Main_Settings', 'after_header' ) );
 
-		Nextpage_Titles_Settings::settings_page_template( $this->hook_suffix, __( 'Multipage Settings', 'sgr-npt' ) );
+		Multipage_Plugin_Settings::settings_page_template( $this->hook_suffix, __( 'Multipage Settings', 'sgr-npt' ) );
 	}
 	
 	/**
