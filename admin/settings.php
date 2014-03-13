@@ -1,10 +1,10 @@
 <?php
 /**
- * Store settings related to the SGR Nextpage Titles plugin
+ * Store settings related to the Multipage Plugin
  *
  * @since 0.93
  */
-class Nextpage_Titles_Settings {
+class Multipage_Plugin_Settings {
 
 	/**
 	 * All plugin features supported
@@ -20,8 +20,8 @@ class Nextpage_Titles_Settings {
 	 * @since 0.93
 	 */
 	public static function init() {
-		add_action( 'admin_menu', array( 'Nextpage_Titles_Settings', 'settings_menu_item' ) );
-		add_action( 'admin_enqueue_scripts', array( 'Nextpage_Titles_Settings', 'enqueue_scripts' ) );
+		add_action( 'admin_menu', array( 'Multipage_Plugin_Settings', 'settings_menu_item' ) );
+		add_action( 'admin_enqueue_scripts', array( 'Multipage_Plugin_Settings', 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -37,22 +37,22 @@ class Nextpage_Titles_Settings {
 	}
 
 	/**
-	 * Add sGR Nextpage Titles settings to the WordPress administration menu.
+	 * Add Multipage Plugin settings to the WordPress administration menu.
 	 *
 	 * @since 0.93
 	 *
-	 * @global Nextpage_Titles_Loader
+	 * @global Multipage_Plugin_Loader
 	 * @global $submenu array submenu created for the menu slugs
 	 * @return void
 	 */
 	public static function settings_menu_item() {
-		global $nextpage_titles_loader;
+		global $multipage_plugin_loader;
 		
 		// main settings page
-		if ( ! class_exists( 'Nextpage_Titles_Main_Settings' ) )
+		if ( ! class_exists( 'Multipage_Plugin_Main_Settings' ) )
 			require_once( dirname( __FILE__ ) . '/settings-main.php' );
 		
-		$menu_hook = Nextpage_Titles_Main_Settings::menu_item();
+		$menu_hook = Multipage_Plugin_Main_Settings::menu_item();
 		if ( ! $menu_hook )
 			return;
 	}

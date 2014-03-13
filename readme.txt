@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 1.0.1
+Stable tag: 1.1
 
 Order your posts into subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -41,13 +41,19 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 1.1 =
+* New Features:
+	* Tag Title now reporting the subpage title instead of the page number.
+* Enhancements:
+	* Added three new filters in order to interact with the Multipage Plugin behavior: multipage_subtitle, multipage_navigation, multipage_content.
+	* Added two more exceptions (thanks to <a rel="nofollow" href="http://wordpress.org/support/profile/silvios">silvios</a>).
+	* Changed the name in Multipage Plugin. Also changed the css filenames in multipage.css and multipage.min.css.
+	
 = 1.0.1 =
-
 * Bug fix:
 	* Loads default values even if never saved settings. 
 
 = 1.0 =
-
 * New Features:
 	* Added the option to hide comments on all the subpages except in the first one.
 	* Added new options to customize the table of contents: "Hide the new TOC header", "Add a link for comments", "Show only on the first page", "Label choices", "Show before or after the content", "Hide it".
@@ -148,6 +154,10 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 
 = 0.22 =
 * Initial beta release.
+
+= To Do Release 1.2 =
+* Shortcode to show the table of contents.
+* Widget for the table of contents.
 
 = To Do Release 2.0 =
 * Pretty urls (not sure).
