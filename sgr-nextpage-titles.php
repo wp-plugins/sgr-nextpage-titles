@@ -5,7 +5,7 @@ Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.1.2
+Version: 1.1.3
 Author URI: http://www.gonk.it/
 */
 
@@ -25,7 +25,7 @@ class Multipage_Plugin_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.1.2';
+	const VERSION = '1.1.3';
 	
 	/**
 	 * Store Multipage default settings.
@@ -221,8 +221,8 @@ class Multipage_Plugin_Loader {
 
 		$subpages = $post->post_subpages;
 		$subpage_title = $subpages[ $page -1 ];
-		$title = str_replace( 'Page ' . $page, $subpage_title, $title );					// Maybe it doesn't work with translations. Please check.
-		
+		$title = str_replace( sprintf( __( 'Page %s', wp_get_theme()->get( 'TextDomain' ) ), $page ), $subpage_title, $title );
+
 		return $title;		
 	}
 
