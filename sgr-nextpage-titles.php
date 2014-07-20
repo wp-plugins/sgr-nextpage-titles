@@ -5,12 +5,12 @@ Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.1.4
+Version: 1.2
 Author URI: http://www.gonk.it/
 */
 
-register_activation_hook(__FILE__			, array('Multipage_Plugin_Loader', 'install_plugin'));									// Registering plugin activation hook.
-register_deactivation_hook( __FILE__		, array('Multipage_Plugin_Loader', 'uninstall_plugin'));									// Registering plugin deactivation hook.
+register_activation_hook(__FILE__			, array('Multipage_Plugin_Loader', 'activate_plugin'));									// Registering plugin activation hook.
+register_deactivation_hook( __FILE__		, array('Multipage_Plugin_Loader', 'unactivate_plugin'));									// Registering plugin deactivation hook.
 
 /**
  * Load the Multipage Plugin
@@ -73,7 +73,7 @@ class Multipage_Plugin_Loader {
 	 *
 	 * @since 0.6
 	 */
-	static function install_plugin() {
+	static function activate_plugin() {
 	}
 	
 	/**
@@ -81,7 +81,7 @@ class Multipage_Plugin_Loader {
 	 *
 	 * @since 0.6
 	 */
-	static function uninstall_plugin() {
+	static function unactivate_plugin() {
 	}
 	
 	/**
@@ -97,24 +97,28 @@ class Multipage_Plugin_Loader {
 		global $post;
 
 		// Variables
-		$page = get_query_var('page');
+		$page = get_query_var( 'page' );
 		$content = $post->post_content;
 		$pattern = "/\[nextpage[^\]]*\]/";
 		$post_subpages = array();
 		$p = 0;
 
-		preg_match_all($pattern, $content, $matches);
+		preg_match_all( $pattern, $content, $matches );
 		foreach ( $matches[0] as $match ) {
+			$atts = shortcode_parse_atts( str_replace(array( '[', ']' ), '', $match) );
+
 			// Check if the intro has a Title
 			if ( 0 == $p && 0 != strpos( $content, $match ) ) :
-				$post_subpages[] = __( 'Intro', 'sgr-npt' );
-				$current_title = $this->get_subpage_title( $match, $p );
+				$post_subpages['title'][] = __( 'Intro', 'sgr-npt' );
+				$post_subpages['scroll_to_toc'][] = false;
+				$current_title = $atts["title"];
 				$p++;
 			else :
-				$current_title = $this->get_subpage_title( $match, $p );
+				$current_title = $atts["title"];
 			endif;
 		
-			$post_subpages[] = $current_title;			
+			$post_subpages['title'][] = $current_title;
+			$post_subpages['scroll_to_toc'][] = in_array( 'toc', $atts ) ? true : false;
 			$p++;
 		}
 		
@@ -185,23 +189,6 @@ class Multipage_Plugin_Loader {
 		// Enqueue the Multipage Plugin styling
 		wp_enqueue_style( $handle, $location . $file, array(), self::VERSION, 'screen' );
 	}
-		
-	/**
-	 * Retrieve the subpage title. If it has no title, use a generic one.
-	 *
-	 * @since 0.6
-	 */
-	public function get_subpage_title( $code, $page ) {
-		$pattern = '/title=(["\'])(.*?)\1/';
-		$count = preg_match( $pattern, $code, $matches );
-		if ( $count ) {
-			return $matches[2];
-		}
-		else {
-			return sprintf( __( 'Page %d', 'sgr-npt' ), $page +1);
-		}
-		return;
-	}
 	
 	/**
 	 * Add the subpages summary and other stuff to the_content.
@@ -219,10 +206,10 @@ class Multipage_Plugin_Loader {
 			return $title;
 
 		$subpages = $post->post_subpages;
-		$subpage_title = $subpages[ $page -1 ];
+		$subpage_title = $subpages['title'][ $page -1 ];
 		
 		// Eventually, manipulate WordPress SEO by Yoast custom title.
-		$title = str_replace( sprintf( __( 'Page %d of %d', 'wordpress-seo' ), $page, count( $subpages ) ), $subpage_title, $title );
+		$title = str_replace( sprintf( __( 'Page %d of %d', 'wordpress-seo' ), $page, max( array_map( 'count', $subpages ) ) ), $subpage_title, $title );
 		
 		// Manipulate Theme standard title.
 		$title = str_replace( sprintf( __( 'Page %s', wp_get_theme()->get( 'TextDomain' ) ), $page ), $subpage_title, $title );
@@ -261,14 +248,14 @@ class Multipage_Plugin_Loader {
 			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
 
 		$subpages = $post->post_subpages;
-		$subtitle = '<h2 class="entry-subtitle">' . $subpages[ $page -1 ] . '</h2>';
+		$subtitle = '<h2 class="entry-subtitle">' . $subpages['title'][ $page -1 ] . '</h2>';
 		
 		add_filter( 'multipage_subtitle', 'return_multipage_subtitle' );
-		
-		if ( $page === count( $subpages ) ) {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages[ 0 ] . '</a></div>';
+	
+		if ( $page === max( array_map( 'count', $subpages ) ) ) {
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
 		} else {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages[ $page ] .'</a></div>';
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
 		}
 		
 		add_filter( 'multipage_navigation', 'return_multipage_navigation' );
@@ -277,28 +264,31 @@ class Multipage_Plugin_Loader {
 
 		if ( ! $options['toc-oofp'] || $page == 1 ) {
 		
-			$toc = '<ul id="multipage-toc-' . $post->ID . '" class="multipage-toc">';
+			$toc = '<ul id="toc" class="multipage-toc multipage-toc-' . $post->ID . '">';
 			if ( ! $options['toc-hide-header'] )					
 				$toc .= '<li class="toc-header">' . __( 'Contents', 'sgr-npt' ) . '</li>';
 						
-			foreach ( $subpages as $c => $match ) {
+			foreach ( $subpages as $b ) {
+				foreach ( $b as $c => $match ) {
 				
-				$current = $c +1;
-				$toc .= '<li class="subpage-' . $current;
-				if ( $current == $page )
-					$toc .= ' current';
-				$toc .= '">';
-				
-				// Subpage label.
-				if ( $options['toc-page-labels'] === 'numbers' ) {
-					$toc .= '<span class="numbers">' . $current . '. </span> ';	
+					$current = $c +1;
+					$toc .= '<li class="subpage-' . $current;
+					if ( $current == $page )
+						$toc .= ' current';
+					$toc .= '">';
+					
+					// Subpage label.
+					if ( $options['toc-page-labels'] === 'numbers' ) {
+						$toc .= '<span class="numbers">' . $current . '. </span> ';	
+					}
+					elseif ( $options['toc-page-labels'] === 'pages' ) {
+						$toc .= '<span class="pages">' . sprintf( __( 'Page %d:', 'sgr-npt' ), $current ) . '</span> ';
+					}
+					
+					// Subpage link.
+					$toc .= '<a href="' . $this->get_subpage_link( $current, $subpages['scroll_to_toc'][ $c ] ) . '">' . $subpages['title'][ $c ] . '</a></li>';
 				}
-				elseif ( $options['toc-page-labels'] === 'pages' ) {
-					$toc .= '<span class="pages">' . sprintf( __( 'Page %d:', 'sgr-npt' ), $current ) . '</span> ';
-				}
-				
-				// Subpage link.
-				$toc .= '<a href="' . $this->get_subpage_link( $current ) . '">' . $match . '</a></li>';
+				break;
 			}
 		
 			// If comments are open add the link to the table of contents.
@@ -325,7 +315,7 @@ class Multipage_Plugin_Loader {
 	 *
 	 * @since 1.0
 	 */
-	private function get_subpage_link( $page ) {
+	private function get_subpage_link( $page, $scroll_to_toc = false ) {
 		$base = get_permalink();
 
 		// If it's the first page the link is the base permalink
@@ -336,6 +326,11 @@ class Multipage_Plugin_Loader {
 			return add_query_arg( array('page' => $page ) );
 		
 		$subpage_link = trailingslashit( $base ) . user_trailingslashit( $page, 'page' );
+		
+		// Add the scroll_to_toc to table of content link
+		if ( $scroll_to_toc == true )
+			$subpage_link .= "#toc";
+
 		return $subpage_link;
 	}
 
