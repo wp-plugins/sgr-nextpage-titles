@@ -5,8 +5,8 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
-Tested up to: 3.8
-Stable tag: 1.1.4
+Tested up to: 3.9.1
+Stable tag: 1.2
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -40,6 +40,12 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 3. The configuration page placed under "Settings > Multipage".
 
 == Changelog ==
+
+= 1.2 =
+* New Features:
+	* Now you can add the "toc" option to your nextpage shortcode to autoscroll to the table of content. This feature is useful when the table of content is placed before the content.
+* Enhancements:
+	* Speeded up the "Get Subpage Title" through the use of the WordPress function `shortcode_parse_atts`, removed get_subpage_title function.
 
 = 1.1.4 =
 * Enhancements:
