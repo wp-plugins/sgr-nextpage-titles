@@ -24,7 +24,7 @@ class Multipage_Plugin_Shortcodes {
 	 */
 	public static function nextpage( $attributes, $content = null ) {
 
-		return '<hr>';
+		return '<!-- nextpage -->';
 	}
 }
 ?>

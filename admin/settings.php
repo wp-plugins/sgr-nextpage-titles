@@ -81,7 +81,7 @@ class Multipage_Plugin_Settings {
 		/**
 		 * Echo content after the page header.
 		 *
-		 * @since 1.1
+		 * @since 1.0
 		 */
 		do_action( 'nextpage_titles_settings_after_header_' . $page_slug );
 
@@ -105,7 +105,7 @@ class Multipage_Plugin_Settings {
 		/**
 		 * Echo content at the bottom of the page.
 		 *
-		 * @since 1.1
+		 * @since 1.0
 		 */
 		do_action( 'nextpage_titles_settings_footer_' . $page_slug );
 	}

@@ -5,8 +5,8 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
-Tested up to: 3.9.1
-Stable tag: 1.2
+Tested up to: 4.0
+Stable tag: 1.2.1
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -22,6 +22,9 @@ Every subpage will generate a different page view, so your statistics will benef
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
 The old WordPress code is not useful anymore. Even if you will not indicate a title for your `[nextpage]` code, sGR Nextpage Titles will use a default title in the form "Page #".
+
+= Customize it as you want =
+Multipage plugin comes with a minimal css in order to make it simplest the user customization. You can create a new multipage.css file and put in the theme folder /css/ in order to use your own CSS. It's important to not change the file provided with the plugin because at the first following update it will be lost. The second options is to modify the Multipage Plugin CSS in your own theme CSS, overriding the standard classes.
 
 = Make we know you care =
 Please make we know you care about sGR Nextpage Titles plugin development rating it (5 stars).
@@ -41,11 +44,17 @@ Please make we know you care about sGR Nextpage Titles plugin development rating
 
 == Changelog ==
 
+= 1.2.1 =
+* Enhancements:
+	* Added rel attributes to the navigation links.
+	* Minor changes to the CSS, always minimal in order to make it simplest the user customization (work in progress).
+	* New WordPress 4.0 plugin icons added and new banner designed.
+* Bug fix:
+	* Check the existence of the $post variable that would generate an error in some conditions.
+
 = 1.2 =
 * New Features:
 	* Now you can add the "toc" option to your nextpage shortcode to autoscroll to the table of content. This feature is useful when the table of content is placed before the content.
-* Enhancements:
-	* Speeded up the "Get Subpage Title" through the use of the WordPress function `shortcode_parse_atts`, removed get_subpage_title function.
 
 = 1.1.4 =
 * Enhancements:

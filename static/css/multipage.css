@@ -3,7 +3,7 @@
 	margin-bottom: 24px;
 }
 ul.multipage-toc {
-	border: 1px solid rgba(0, 0, 0, 0.1);
+	border: 1px solid #d6d6d6;
 	list-style: none;
 	padding: 0;
 	margin: 0 0 24px 0;
@@ -11,18 +11,17 @@ ul.multipage-toc {
 ul.multipage-toc li {
 	padding: 2px 8px;
 	margin: 0;
-	border-bottom: 1px solid #eee;
 }
 ul.multipage-toc li.toc-header {
-	font-size: 120%;
+	background: #f9f9f9;
+	color: #555;
+	border-bottom: 1px solid #d6d6d6;
 	font-weight: bold;
-	border-bottom: 1px solid #ddd;
 }
 ul.multipage-toc li.toc-footer {
 	text-align: right;
 }
 ul.multipage-toc li.current {
-	font-weight: bold;
 }
 ul.multipage-toc li:last-child {
 	border-bottom: 0;
