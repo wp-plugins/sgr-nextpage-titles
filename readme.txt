@@ -12,22 +12,22 @@ Order your posts in subpages: multipage posts will have a table of contents link
 
 == Description ==
 
-Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
+Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will make you able to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
 
 = Make order in your posts! =
-Forget about too long posts, infinite height pages, diffculty to found a post section. With sGR Nextpage Titles you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the desidered subpage of the post.
+Forget about extremely lengthy pages, diffculty to find a post section. With sGR Nextpage Titles you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the wanted post subpage.
 
 = Benefit from different subpages =
 Every subpage will generate a different page view, so your statistics will benefit.
 
 = Forget about the old `&lt;!--nextpage--&gt;` =
-The old WordPress code is not useful anymore. Even if you will not indicate a title for your `[nextpage]` code, sGR Nextpage Titles will use a default title in the form "Page #".
+The old WordPress code is not useful anymore. Even if you do not indicate a title for your `[nextpage]` code, sGR Nextpage Titles will use a default title in the form "Page #".
 
 = Customize it as you want =
-Multipage plugin comes with a minimal css in order to make it simplest the user customization. You can create a new multipage.css file and put in the theme folder /css/ in order to use your own CSS. It's important to not change the file provided with the plugin because at the first following update it will be lost. The second options is to modify the Multipage Plugin CSS in your own theme CSS, overriding the standard classes.
+Multipage plugin comes with a minimal css in order to make the user customization simpler. You can create a new multipage.css file and put it in the theme folder /css/ so you can use your own CSS. It is important not to change the file provided with the plugin because at the first following update it will be lost. The second option is to modify the Multipage Plugin CSS in your own theme CSS, overriding the standard classes.
 
-= Make we know you care =
-Please make we know you care about sGR Nextpage Titles plugin development rating it (5 stars).
+= Let us know you care about this =
+Please let us know how much you care about Multipage Plugin development rating it (5 stars).
 
 == Installation ==
 
