@@ -5,12 +5,12 @@ Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.2
+Version: 1.2.1
 Author URI: http://www.gonk.it/
 */
 
-register_activation_hook(__FILE__			, array('Multipage_Plugin_Loader', 'activate_plugin'));									// Registering plugin activation hook.
-register_deactivation_hook( __FILE__		, array('Multipage_Plugin_Loader', 'unactivate_plugin'));									// Registering plugin deactivation hook.
+register_activation_hook( __FILE__			, array('Multipage_Plugin_Loader', 'activate_plugin') );									// Registering plugin activation hook.
+register_deactivation_hook( __FILE__		, array('Multipage_Plugin_Loader', 'deactivate_plugin') );									// Registering plugin deactivation hook.
 
 /**
  * Load the Multipage Plugin
@@ -25,7 +25,7 @@ class Multipage_Plugin_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.1.4';
+	const VERSION = '1.2.1';
 	
 	/**
 	 * Store Multipage default settings.
@@ -81,7 +81,7 @@ class Multipage_Plugin_Loader {
 	 *
 	 * @since 0.6
 	 */
-	static function unactivate_plugin() {
+	static function deactivate_plugin() {
 	}
 	
 	/**
@@ -90,11 +90,11 @@ class Multipage_Plugin_Loader {
 	 * @since 1.0
 	 */
 	public function public_init() {
-		// no need to process
-		if ( is_feed() || is_404() )
-			return;
-			
 		global $post;
+		
+		// no need to process
+		if ( is_feed() || is_404() || empty( $post ) )
+			return;
 
 		// Variables
 		$page = get_query_var( 'page' );
@@ -165,7 +165,7 @@ class Multipage_Plugin_Loader {
 	public static function enqueue_styles() {
 	
 		// LTR or RTL
-		$file = is_rtl() ? 'static/css/multipage-rtl' : 'static/css/multipage';
+		$file = is_rtl() ? 'css/multipage-rtl' : 'css/multipage';
 		
 		// Minimized version or not
 		$file .= ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ) . '.css';
@@ -182,7 +182,7 @@ class Multipage_Plugin_Loader {
 
 		// Multipage Plugin Theme Compatibility
 		} else {
-			$location = trailingslashit( plugin_dir_url( __FILE__ ) );
+			$location = trailingslashit( plugin_dir_url( __FILE__ ) ) . 'static/';
 			$handle   = 'default-multipage';
 		}
 
@@ -253,9 +253,9 @@ class Multipage_Plugin_Loader {
 		add_filter( 'multipage_subtitle', 'return_multipage_subtitle' );
 	
 		if ( $page === max( array_map( 'count', $subpages ) ) ) {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a rel="index" href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
 		} else {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a rel="next" href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
 		}
 		
 		add_filter( 'multipage_navigation', 'return_multipage_navigation' );
@@ -271,7 +271,7 @@ class Multipage_Plugin_Loader {
 			foreach ( $subpages as $b ) {
 				foreach ( $b as $c => $match ) {
 				
-					$current = $c +1;
+					$current = $c+1;
 					$toc .= '<li class="subpage-' . $current;
 					if ( $current == $page )
 						$toc .= ' current';
