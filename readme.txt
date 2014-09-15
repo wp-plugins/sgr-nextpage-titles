@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -15,7 +15,7 @@ Order your posts in subpages: multipage posts will have a table of contents link
 Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will make you able to order a post in multipages, giving each subpage a title and having a table of contents on the first or on every subpage.
 
 = Make order in your posts! =
-Forget about extremely lengthy pages, diffculty to find a post section. With sGR Nextpage Titles you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the wanted post subpage.
+Forget about extremely lengthy pages, diffculty to find a post section. With Multipage Plugin you can divide every post into many subpages, giving them a title. Then a table of contents will appear to redirect your visitors to the wanted post subpage.
 
 = Benefit from different subpages =
 Every subpage will generate a different page view, so your statistics will benefit.
@@ -43,6 +43,10 @@ Please let us know how much you care about Multipage Plugin development rating i
 3. The configuration page placed under "Settings > Multipage".
 
 == Changelog ==
+
+= 1.2.2 =
+* Bug fix:
+	* Correction to overflow pages, MultPage Plugin is now consistent with the default behavior of WordPress, it will show the first page if an overflow page is requested.
 
 = 1.2.1 =
 * Enhancements:
