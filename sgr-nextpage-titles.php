@@ -5,7 +5,7 @@ Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
 Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
 Author: Sergio De Falco aka SGr33n
-Version: 1.2.1
+Version: 1.2.2
 Author URI: http://www.gonk.it/
 */
 
@@ -25,7 +25,7 @@ class Multipage_Plugin_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.2.2';
 	
 	/**
 	 * Store Multipage default settings.
@@ -129,8 +129,8 @@ class Multipage_Plugin_Loader {
 		
 		// If the requested page doesn't exist (even if there is a declared page=1 variable).
 		// return 404.
-		if ( $page == 1 || $page > $p )
-			$this->return_404();
+		//if ( $page == 1 || $page > $p )
+			//$this->return_404();
 		
 		// Update $post Object with new data.
 		$post->post_content = preg_replace( $pattern, '<!--nextpage-->', $content );
@@ -198,8 +198,16 @@ class Multipage_Plugin_Loader {
 	public function enhance_title( $title ) {
 		global $post;
 		
-		// Get the page number
+		// Get the page number - ToDo: create a function to retrieve the page number
 		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
+		
+		// If it is the the first page.
+		if ( $page <= 1 )
+			return $title;
+
+		// Correct the page number for over pages, consistent with the behavior of WordPress.
+		if ( $page > max( array_map( 'count', $post->post_subpages ) ) )
+			$page = 1;
 		
 		// If it is the the first page.
 		if ( $page <= 1 )
@@ -208,8 +216,9 @@ class Multipage_Plugin_Loader {
 		$subpages = $post->post_subpages;
 		$subpage_title = $subpages['title'][ $page -1 ];
 		
-		// Eventually, manipulate WordPress SEO by Yoast custom title.
-		$title = str_replace( sprintf( __( 'Page %d of %d', 'wordpress-seo' ), $page, max( array_map( 'count', $subpages ) ) ), $subpage_title, $title );
+		// Eventually, manipulate WordPress SEO by Yoast custom title. Note that WP SEO counts +1 pages than real, investigate on this
+		// for now I added +1 to the following expression in order to make it work.
+		$title = str_replace( sprintf( __( 'Page %d of %d', 'wordpress-seo' ), $page, max( array_map( 'count', $subpages ) ) + 1 ), $subpage_title, $title );
 		
 		// Manipulate Theme standard title.
 		$title = str_replace( sprintf( __( 'Page %s', wp_get_theme()->get( 'TextDomain' ) ), $page ), $subpage_title, $title );
@@ -234,14 +243,18 @@ class Multipage_Plugin_Loader {
 			
 		if ( ! property_exists( $post, 'post_subpages' ) )
            return $content;
+		   
+		// Get the page number - ToDo: create a function to retrieve the page number
+		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
+		
+		// Correct the page number for overflow pages, consistent with the behavior of WordPress.
+		if ( $page > max( array_map( 'count', $post->post_subpages ) ) )
+			$page = 1;
 			
 		// Get options with default values.
 		$options = get_option( 'multipage', $this->multipage_settings_defaults );
 		if ( ! is_array( $options ) )
 			$options = array();
-			
-		// Get the page number.
-		$page = ( get_query_var('page') ) ? get_query_var('page') : 1;
 		
 		// If not the first page, hide comments.
 		if ( $page != 1 && $options['comments-oofp'] )
@@ -252,7 +265,7 @@ class Multipage_Plugin_Loader {
 		
 		add_filter( 'multipage_subtitle', 'return_multipage_subtitle' );
 	
-		if ( $page === max( array_map( 'count', $subpages ) ) ) {
+		if ( $page >= max( array_map( 'count', $subpages ) ) ) {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a rel="index" href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
 		} else {
 			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a rel="next" href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
