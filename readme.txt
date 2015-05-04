@@ -5,8 +5,8 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
-Tested up to: 4.1
-Stable tag: 1.2.3
+Tested up to: 4.2
+Stable tag: 1.2.4
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -43,6 +43,14 @@ Please let us know how much you care about Multipage Plugin development rating i
 3. The configuration page placed under "Settings > Multipage".
 
 == Changelog ==
+
+= 1.2.4 =
+Release Date: May 4th, 2015
+
+* Enhancements:
+	* Fully tested on WordPress 4.2
+* Bug fix:
+	* Compatible with latest WordPress SEO versions
 
 = 1.2.3 =
 * Enhancements:
