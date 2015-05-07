@@ -1,0 +1,3 @@
+.mce-content-body img[data-wp-more="subpage"] {
+    background: url("../images/subpagebreak.png") repeat-y scroll center center transparent;
+}

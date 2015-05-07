@@ -22,7 +22,53 @@ class Multipage_Plugin_Settings {
 	public static function init() {
 		add_action( 'admin_menu', array( 'Multipage_Plugin_Settings', 'settings_menu_item' ) );
 		add_action( 'admin_enqueue_scripts', array( 'Multipage_Plugin_Settings', 'enqueue_scripts' ) );
+		
+		// Check if current user can edit posts & pages
+		if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
+			
+			// Check if TinyMCE is enabled
+			if ( get_user_option( 'rich_editing' ) == 'true') {
+			
+				// Add TinyMCE Plugin
+				add_filter( 'mce_css', array( 'Multipage_Plugin_Settings', 'multipage_mce_css' ) );
+				add_filter( 'mce_buttons', array( 'Multipage_Plugin_Settings', 'multipage_mce_button' ) );
+				add_filter( 'mce_external_plugins', array( 'Multipage_Plugin_Settings', 'multipage_mce_external_plugin' ) );
+				add_filter( 'mce_external_languages', array( 'Multipage_Plugin_Settings', 'multipage_mce_external_language' ) );
+			
+			}
+			
+			// Add HTML Editor button
+			add_action( 'admin_print_footer_scripts', array( 'Multipage_Plugin_Settings', 'appthemes_add_quicktags' ) );
+		}
 	}
+	
+	/**
+	 * Add HTML Text Editor Subpage button
+	 *
+	 * @since 1.3
+	 */
+	public static function appthemes_add_quicktags() {
+		if ( wp_script_is( 'quicktags' ) ) {
+	?>
+	<script type="text/javascript">
+		QTags.addButton( 'eg_subpage', '<?php _e( 'subpage', 'sgr-npt' ); ?>', prompt_subtitle, '', '', '<?php _e( 'Start a new Subpage', 'sgr-npt' ); ?>', 121 );
+		
+		function prompt_subtitle(e, c, ed) {
+			var subtitle = prompt( '<?php _e( 'Enter the subpage title', 'sgr-npt' ); ?>' ),
+				shortcode, t = this;
+
+			if (typeof subtitle != 'undefined' && subtitle.length < 2) return;
+
+			t.tagStart = '[nextpage title="' + subtitle + '"]\n\n';
+			t.tagEnd = false;
+			
+			// now we've defined all the tagStart, tagEnd and openTags we process it all to the active window
+			QTags.TagButton.prototype.callback.call(t, e, c, ed);
+		};
+	</script>
+	<?php
+			}
+		}
 
 	/**
 	 * Enqueue scripts and styles.
@@ -35,7 +81,65 @@ class Multipage_Plugin_Settings {
 	public static function enqueue_scripts() {
 		wp_enqueue_style( 'multipage-admin', plugins_url( 'static/css/admin/multipage-admin' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.css', dirname( __FILE__ ) ), array(), '1.5' );
 	}
+	
+	/**
+	 * Add a new TinyMCE css.
+	 *
+	 * @since 1.3
+	 *
+	 * @return string
+	 */
+	public static function multipage_mce_css( $mce_css ) {
+		if ( ! empty( $mce_css ) )
+			$mce_css .= ',';
 
+		$mce_css .= plugins_url( 'admin/tinymce/css/multipage' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.css', dirname( __FILE__ ) );
+		return $mce_css;
+	}
+
+	/**
+	 * Add the new subpage TinyMCE button.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $buttons
+	 */
+	public static function multipage_mce_button( $buttons ) {
+		// Insert 'Subpage' button after the 'WP More' button
+		$wp_more_key = array_search( 'wp_more', $buttons ) +1;
+		$buttons_after = array_splice( $buttons, $wp_more_key);
+		
+		array_unshift($buttons_after, 'subpage');
+		
+		$buttons = array_merge($buttons, $buttons_after);
+		
+		return $buttons;
+	}
+
+	/**
+	 * Add the new TinyMCE plugin.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $plugin_array
+	 */
+	public static function multipage_mce_external_plugin( $plugin_array ) {
+		$plugin_array['multipage'] = plugins_url( 'admin/tinymce/js/plugin.js', dirname( __FILE__ ) );
+		return $plugin_array;
+	}
+	
+	/**
+	 * Add the new TinyMCE plugin locale.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $locales
+	 */
+	public static function multipage_mce_external_language( $locales ) {
+		$locales ['multipage'] = plugin_dir_path ( __FILE__ ) . 'tinymce/languages.php';
+		return $locales;
+	}
+	
 	/**
 	 * Add Multipage Plugin settings to the WordPress administration menu.
 	 *

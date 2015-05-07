@@ -3,10 +3,13 @@
 /*
 Plugin Name: Multipage Plugin
 Plugin URI: http://wordpress.org/plugins/sgr-nextpage-titles/
-Description: Multipage Plugin for WordPress (formerly sGR Nextpage Titles) will give you the ability to order a post in multipages, giving each subpage a title and having a table of contents.
-Author: Sergio De Falco aka SGr33n
-Version: 1.2.4
-Author URI: http://www.gonk.it/
+Description: Multipage Plugin for WordPress will give you the ability to order a post in multiple subpages, giving each subpage a title and having a table of contents.
+Author: Sergio De Falco
+Version: 1.3
+Author URI: http://www.envire.it/
+Text Domain: sgr-npt
+Domain Path: /languages/
+License: GPL v3
 */
 
 register_activation_hook( __FILE__			, array('Multipage_Plugin_Loader', 'activate_plugin') );									// Registering plugin activation hook.
@@ -25,7 +28,7 @@ class Multipage_Plugin_Loader {
 	 * @since 0.6
 	 * @var string
 	 */
-	const VERSION = '1.2.4';
+	const VERSION = '1.3';
 	
 	/**
 	 * Store Multipage default settings.
@@ -246,7 +249,11 @@ class Multipage_Plugin_Loader {
 		$options = get_option( 'multipage', $this->multipage_settings_defaults );
 		if ( ! is_array( $options ) )
 			$options = array();
-		
+			
+		// If not the first page, hide featured image.
+		//if ( $page != 1 )
+			//add_filter( 'get_post_metadata', array( &$this, 'hide_post_thumbnail' ), 999, 4 );  
+
 		// If not the first page, hide comments.
 		if ( $page != 1 && $options['comments-oofp'] )
 			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
@@ -357,6 +364,17 @@ class Multipage_Plugin_Loader {
 		return $args;
 	}
 	
+	/**
+	 * Hide featured image.
+	 *
+	 * @since 1.3
+	 */ 
+	public static function hide_post_thumbnail($content, $object_id, $meta_key, $single){
+		// Return false if the current filter is that of a post thumbnail. Otherwise, return the original $content value.  
+		return ( isset($meta_key) && '_thumbnail_id' === $meta_key && $single ) ? false : $content;
+
+	}  
+
 	/**
 	 * Hide comments area.
 	 *

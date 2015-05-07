@@ -144,6 +144,15 @@ class Multipage_Plugin_Main_Settings {
 			array( &$this, 'section_header' ),
 			$this->hook_suffix
 		);
+		
+		add_settings_field(
+			'intro-oep',
+			__( 'Intro', 'sgr-npt' ),
+			array( &$this, 'display_intro_oep' ),
+			$this->hook_suffix,
+			'multipage',
+			array( 'label_for' => 'intro-oep' )
+		);
 
 		add_settings_field(
 			'comments-oofp',
@@ -217,6 +226,31 @@ class Multipage_Plugin_Main_Settings {
 	 */
 	public function section_header() {
 		//echo "";
+	}
+	
+	/**
+	 * Display a checkbox to set if the intro must appear on every page.
+	 *
+	 * @since 1.3
+	 *
+	 * @return void
+	 */
+	public function display_intro_oep() {
+		$key = 'intro-oep';
+		
+		if ( isset( $this->existing_options[$key] ) && $this->existing_options[$key] )
+			$existing_value = $this->existing_options[$key];
+		else
+			$existing_value = '';
+
+		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
+		checked( $existing_value );
+		echo ' /> ';
+		echo esc_html( __( 'Show the intro and the featured image on every page.', 'sgr-npt' ) );
+		echo '</label>';
+		echo '<p class="description">';
+		echo esc_html( __( 'If unchecked, the intro will act as a stand-alone page.', 'sgr-npt' ) );
+		echo '</p>';
 	}
 	
 	/**
@@ -425,6 +459,11 @@ class Multipage_Plugin_Main_Settings {
 			$clean_options['comments-oofp'] = $options['comments-oofp'];
 		else
 			$clean_options['comments-oofp'] = 0;
+
+		if ( isset( $options['intro-oep'] ) )
+			$clean_options['intro-oep'] = $options['intro-oep'];
+		else
+			$clean_options['intro-oep'] = 0;
 		
 		// Table of contents.
 		if ( isset( $options['toc-oofp'] ) )
@@ -514,13 +553,7 @@ class Multipage_Plugin_Main_Settings {
 	 */
 	public static function page_labels_choices( $existing_value = 'numbers' ) {
 		if ( ! ( is_string( $existing_value) && $existing_value && in_array( $existing_value, self::$page_labels_choices ) ) )
-			$existing_value = 'bottom';
-
-		$descriptions = array(
-			'bottom' => __( 'after the content', 'sgr-npt' ),
-			'top' => __( 'before the content', 'sgr-npt' ),
-			'hidden' => __( 'hidden', 'sgr-npt' )
-		);
+			$existing_value = 'numbers'; // Verificare questo
 
 		$options = '';
 		foreach( self::$page_labels_choices as $page_labels ) {

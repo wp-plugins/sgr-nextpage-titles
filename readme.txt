@@ -3,7 +3,7 @@ Contributors: SGr33n
 Donate link: http://goo.gl/QuRfT
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
-Tags: multipage, nextpage, subpages, seo, posts, page, index, shortcode
+Tags: multipage, multi-page, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 4.2
 Stable tag: 1.2.4
@@ -44,6 +44,10 @@ Please let us know how much you care about Multipage Plugin development rating i
 
 == Changelog ==
 
+= 1.3 =
+* New Features:
+	* Added the "Subpage" button to the WordPress visual editor.
+	
 = 1.2.4 =
 Release Date: May 4th, 2015
 
@@ -54,7 +58,7 @@ Release Date: May 4th, 2015
 
 = 1.2.3 =
 * Enhancements:
-	* Fully tested for WordPress 4.1
+	* Fully tested on WordPress 4.1
 * Bug fix:
 	* Correction to multipage_subtitle, multipage_navigation, multipage_content filters, that were not working (thanks to <a rel="nofollow" href="http://wordpress.org/support/profile/silvios">silvios</a>).
 
