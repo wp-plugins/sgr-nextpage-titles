@@ -15,9 +15,9 @@ if ( ! class_exists( '_WP_Editors' ) )
 
 function multipage_tinymce_plugin_translation() {
     $strings = array(
-        'new_subpage'					=> __( 'Start a new Subpage', 'sgr-npt' ),
-		'enter_subpage_title'			=> __( 'Enter the subpage title', 'sgr-npt' ),
-		//'subpage_title_too_short'		=> __( 'The subpage title is too short.', 'sgr-npt' ),
+        'new_subpage'					=> __( 'Start a new Subpage', 'sgr-nextpage-titles' ),
+		'enter_subpage_title'			=> __( 'Enter the subpage title', 'sgr-nextpage-titles' ),
+		//'subpage_title_too_short'		=> __( 'The subpage title is too short.', 'sgr-nextpage-titles' ),
     );
 
     $locale = _WP_Editors::$mce_locale;

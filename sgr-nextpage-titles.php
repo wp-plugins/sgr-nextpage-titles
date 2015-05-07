@@ -7,7 +7,7 @@ Description: Multipage Plugin for WordPress will give you the ability to order a
 Author: Sergio De Falco
 Version: 1.3
 Author URI: http://www.envire.it/
-Text Domain: sgr-npt
+Text Domain: sgr-nextpage-titles
 Domain Path: /languages/
 License: GPL v3
 */
@@ -49,12 +49,30 @@ class Multipage_Plugin_Loader {
 		$this->plugin_directory = dirname(__FILE__) . '/';
 
 		// Load the textdomain for translations
-		load_plugin_textdomain( 'sgr-npt', true, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'sgr-nextpage-titles', true, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		
 		// load shortcodes
 		if ( ! class_exists( 'Multipage_Plugin_Shortcodes' ) )
 			require_once( $this->plugin_directory . 'classes/shortcodes.php' );
 		Multipage_Plugin_Shortcodes::init();
+		
+		// Check if current user can edit posts & pages
+		if ( is_user_logged_in() && current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
+			
+			// Check if TinyMCE is enabled
+			if ( get_user_option( 'rich_editing' ) == 'true') {
+			
+				// Add TinyMCE Plugin
+				add_filter( 'mce_css', array( &$this, 'multipage_mce_css' ) );
+				add_filter( 'mce_buttons', array( &$this, 'multipage_mce_button' ) );
+				add_filter( 'mce_external_plugins', array( &$this, 'multipage_mce_external_plugin' ) );
+				add_filter( 'mce_external_languages', array( &$this, 'multipage_mce_external_language' ) );
+			
+			}
+			
+			// Add HTML Editor button
+			add_action( 'admin_print_footer_scripts', array( &$this, 'multipage_add_quicktags' ) );
+		}
 		
 		if ( is_admin() ) {
 			$this->admin_init();
@@ -104,7 +122,7 @@ class Multipage_Plugin_Loader {
 
 			// Check if the intro has a Title
 			if ( 0 == $p && 0 != strpos( $content, $match ) ) :
-				$post_subpages['title'][] = __( 'Intro', 'sgr-npt' );
+				$post_subpages['title'][] = __( 'Intro', 'sgr-nextpage-titles' );
 				$post_subpages['scroll_to_toc'][] = false;
 				$current_title = $atts["title"];
 				$p++;
@@ -149,6 +167,92 @@ class Multipage_Plugin_Loader {
 		if ( ! class_exists( 'Multipage_Plugin_Settings' ) )
 			require_once( $admin_dir . 'settings.php' );
 		Multipage_Plugin_Settings::init();
+	}
+	
+	/**
+	 * Add HTML Text Editor Subpage button
+	 *
+	 * @since 1.3
+	 */
+	public static function multipage_add_quicktags() {
+		if ( wp_script_is( 'quicktags' ) ) {
+	?>
+	<script type="text/javascript">
+		QTags.addButton( 'eg_subpage', '<?php _e( 'subpage', 'sgr-nextpage-titles' ); ?>', prompt_subtitle, '', '', '<?php _e( 'Start a new Subpage', 'sgr-nextpage-titles' ); ?>', 121 );
+		
+		function prompt_subtitle(e, c, ed) {
+			var subtitle = prompt( '<?php _e( 'Enter the subpage title', 'sgr-nextpage-titles' ); ?>' ),
+				shortcode, t = this;
+
+			if (typeof subtitle != 'undefined' && subtitle.length < 2) return;
+
+			t.tagStart = '[nextpage title="' + subtitle + '"]\n\n';
+			t.tagEnd = false;
+			
+			// now we've defined all the tagStart, tagEnd and openTags we process it all to the active window
+			QTags.TagButton.prototype.callback.call(t, e, c, ed);
+		};
+	</script>
+	<?php
+		}
+	}
+	
+	/**
+	 * Add a new TinyMCE css.
+	 *
+	 * @since 1.3
+	 *
+	 * @return string
+	 */
+	public static function multipage_mce_css( $mce_css ) {
+		if ( ! empty( $mce_css ) )
+			$mce_css .= ',';
+
+		$mce_css .= plugin_dir_url( __FILE__ ) . 'admin/tinymce/css/multipage' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.css';
+		return $mce_css;
+	}
+
+	/**
+	 * Add the new subpage TinyMCE button.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $buttons
+	 */
+	public static function multipage_mce_button( $buttons ) {
+		// Insert 'Subpage' button after the 'WP More' button
+		$wp_more_key = array_search( 'wp_more', $buttons ) +1;
+		$buttons_after = array_splice( $buttons, $wp_more_key);
+		
+		array_unshift($buttons_after, 'subpage');
+		
+		$buttons = array_merge($buttons, $buttons_after);
+		
+		return $buttons;
+	}
+
+	/**
+	 * Add the new TinyMCE plugin.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $plugin_array
+	 */
+	public static function multipage_mce_external_plugin( $plugin_array ) {
+		$plugin_array['multipage'] = plugin_dir_url( __FILE__ ) . 'admin/tinymce/js/plugin' . ( ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min' ) . '.js';
+		return $plugin_array;
+	}
+	
+	/**
+	 * Add the new TinyMCE plugin locale.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array $locales
+	 */
+	public static function multipage_mce_external_language( $locales ) {
+		$locales['multipage'] = plugin_dir_path ( __FILE__ ) . 'admin/tinymce/languages.php';
+		return $locales;
 	}
 	
 	/**
@@ -262,9 +366,9 @@ class Multipage_Plugin_Loader {
 		$subtitle = '<h2 class="entry-subtitle">' . apply_filters( 'multipage_subtitle', $subpages['title'][ $page -1 ] ) . '</h2>';
 	
 		if ( $page >= max( array_map( 'count', $subpages ) ) ) {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-npt' ) . ' <a rel="index" href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Back to: ', 'sgr-nextpage-titles' ) . ' <a rel="index" href="' . get_permalink() . '">' . $subpages['title'][ 0 ] . '</a></div>';
 		} else {
-			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-npt' ) . ' <a rel="next" href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
+			$multipagenav = '<div class="multipage-navlink">' . __( 'Continue:', 'sgr-nextpage-titles' ) . ' <a rel="next" href="' . $this->get_subpage_link( $page +1 ) . '">' . $subpages['title'][ $page ] .'</a></div>';
 		}
 		
 		$multipagenav = apply_filters( 'multipage_navigation', $multipagenav );
@@ -275,7 +379,7 @@ class Multipage_Plugin_Loader {
 		
 			$toc = '<ul id="toc" class="multipage-toc multipage-toc-' . $post->ID . '">';
 			if ( ! $options['toc-hide-header'] )					
-				$toc .= '<li class="toc-header">' . __( 'Contents', 'sgr-npt' ) . '</li>';
+				$toc .= '<li class="toc-header">' . __( 'Contents', 'sgr-nextpage-titles' ) . '</li>';
 						
 			foreach ( $subpages as $b ) {
 				foreach ( $b as $c => $match ) {
@@ -291,7 +395,7 @@ class Multipage_Plugin_Loader {
 						$toc .= '<span class="numbers">' . $current . '. </span> ';	
 					}
 					elseif ( $options['toc-page-labels'] === 'pages' ) {
-						$toc .= '<span class="pages">' . sprintf( __( 'Page %d:', 'sgr-npt' ), $current ) . '</span> ';
+						$toc .= '<span class="pages">' . sprintf( __( 'Page %d:', 'sgr-nextpage-titles' ), $current ) . '</span> ';
 					}
 					
 					// Subpage link.
@@ -302,7 +406,7 @@ class Multipage_Plugin_Loader {
 		
 			// If comments are open add the link to the table of contents.
 			if ( comments_open() && $options['toc-comments-link'] )		
-				$toc .= '<li class="toc-footer"><a href="' . get_comments_link()  . '">' . sprintf( __( 'Comments (%d)', 'sgr-npt' ), get_comments_number() ) . '</a></li>';
+				$toc .= '<li class="toc-footer"><a href="' . get_comments_link()  . '">' . sprintf( __( 'Comments (%d)', 'sgr-nextpage-titles' ), get_comments_number() ) . '</a></li>';
 				
 			$toc .= '</ul><!-- #multipage-toc-' . $post->ID . '-->';
 			

@@ -59,7 +59,7 @@ class Multipage_Plugin_Main_Settings {
 		$main_settings = new Multipage_Plugin_Main_Settings();
 
 		$hook_suffix = add_options_page(
-			__( 'Multipage Settings', 'sgr-npt' ), // page <title>
+			__( 'Multipage Settings', 'sgr-nextpage-titles' ), // page <title>
 			'Multipage', // menu title
 			'manage_options', // capability needed
 			self::PAGE_SLUG, // what should I call you?
@@ -108,7 +108,7 @@ class Multipage_Plugin_Main_Settings {
 
 		add_action( 'nextpage_titles_settings_after_header_' . $this->hook_suffix, array( 'Multipage_Plugin_Main_Settings', 'after_header' ) );
 
-		Multipage_Plugin_Settings::settings_page_template( $this->hook_suffix, __( 'Multipage Settings', 'sgr-npt' ) );
+		Multipage_Plugin_Settings::settings_page_template( $this->hook_suffix, __( 'Multipage Settings', 'sgr-nextpage-titles' ) );
 	}
 	
 	/**
@@ -147,16 +147,25 @@ class Multipage_Plugin_Main_Settings {
 		
 		add_settings_field(
 			'intro-oep',
-			__( 'Intro', 'sgr-npt' ),
-			array( &$this, 'display_intro_oep' ),
+			__( 'Intro', 'sgr-nextpage-titles' ),
+			array( &$this, 'display_intro_oofp' ),
 			$this->hook_suffix,
 			'multipage',
 			array( 'label_for' => 'intro-oep' )
 		);
+		
+		add_settings_field(
+			'force-rewrite-titles',
+			__( 'Force rewrite titles', 'sgr-nextpage-titles' ),
+			array( &$this, 'display_force_rewrite_titles' ),
+			$this->hook_suffix,
+			'multipage',
+			array( 'label_for' => 'force-rewrite-titles' )
+		);
 
 		add_settings_field(
 			'comments-oofp',
-			__( 'Comments', 'sgr-npt' ),
+			__( 'Comments', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_comments_oofp' ),
 			$this->hook_suffix,
 			'multipage',
@@ -166,14 +175,14 @@ class Multipage_Plugin_Main_Settings {
 		$section = 'toc';
 		add_settings_section(
 			$section,
-			__( 'Table of contents', 'sgr-npt' ),
+			__( 'Table of contents', 'sgr-nextpage-titles' ),
 			array( &$this, 'section_header' ),
 			$this->hook_suffix
 		);
 
 		add_settings_field(
 			'toc-oofp',
-			__( 'Only on the first page', 'sgr-npt' ),
+			__( 'Only on the first page', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_toc_oofp' ),
 			$this->hook_suffix,
 			$section,
@@ -182,7 +191,7 @@ class Multipage_Plugin_Main_Settings {
 		
 		add_settings_field(
 			'toc-position',
-			_x( 'Position', 'Desired position of a the table of the contents.', 'sgr-npt' ),
+			_x( 'Position', 'Desired position of a the table of the contents.', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_position' ),
 			$this->hook_suffix,
 			$section,
@@ -191,7 +200,7 @@ class Multipage_Plugin_Main_Settings {
 		
 		add_settings_field(
 			'toc-page-labels',
-			_x( 'Page labels', 'Select which type of page labels to display.', 'sgr-npt' ),
+			_x( 'Page labels', 'Select which type of page labels to display.', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_page_labels' ),
 			$this->hook_suffix,
 			$section,
@@ -200,7 +209,7 @@ class Multipage_Plugin_Main_Settings {
 		
 		add_settings_field(
 			'toc-hide-header',
-			__( 'Hide header', 'sgr-npt' ),
+			__( 'Hide header', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_hide_header' ),
 			$this->hook_suffix,
 			$section,
@@ -209,7 +218,7 @@ class Multipage_Plugin_Main_Settings {
 
 		add_settings_field(
 			'toc-comments-link',
-			__( 'Comments link', 'sgr-npt' ),
+			__( 'Comments link', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_comments_link' ),
 			$this->hook_suffix,
 			$section,
@@ -235,7 +244,7 @@ class Multipage_Plugin_Main_Settings {
 	 *
 	 * @return void
 	 */
-	public function display_intro_oep() {
+	public function display_intro_oofp() {
 		$key = 'intro-oep';
 		
 		if ( isset( $this->existing_options[$key] ) && $this->existing_options[$key] )
@@ -246,13 +255,38 @@ class Multipage_Plugin_Main_Settings {
 		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
 		checked( $existing_value );
 		echo ' /> ';
-		echo esc_html( __( 'Show the intro and the featured image on every page.', 'sgr-npt' ) );
+		echo esc_html( __( 'Show the intro on every page.', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 		echo '<p class="description">';
-		echo esc_html( __( 'If unchecked, the intro will act as a stand-alone page.', 'sgr-npt' ) );
+		echo esc_html( __( 'If unchecked, the intro will act as a stand-alone page.', 'sgr-nextpage-titles' ) );
 		echo '</p>';
 	}
-	
+
+	/**
+	 * Display a checkbox to force revrite titles (increase priority).
+	 *
+	 * @since 1.3
+	 *
+	 * @return void
+	 */
+	public function display_force_rewrite_titles() {
+		$key = 'force-rewrite-titles';
+		
+		if ( isset( $this->existing_options[$key] ) && $this->existing_options[$key] )
+			$existing_value = $this->existing_options[$key];
+		else
+			$existing_value = '';
+
+		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
+		checked( $existing_value );
+		echo ' /> ';
+		echo esc_html( __( 'Enable force rewrite titles.', 'sgr-nextpage-titles' ) );
+		echo '</label>';
+		echo '<p class="description">';
+		echo esc_html( __( 'Some plugins needs this enabled in order to correctly show the subpage title instead of "Page # of #". If the title works good please leave this disabled.', 'sgr-nextpage-titles' ) );
+		echo '</p>';
+	}
+
 	/**
 	 * Display a checkbox to set if the comments must appear only on the first page of the post.
 	 *
@@ -271,7 +305,7 @@ class Multipage_Plugin_Main_Settings {
 		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
 		checked( $existing_value );
 		echo ' /> ';
-		echo esc_html( __( 'Show the comments only on the first page.', 'sgr-npt' ) );
+		echo esc_html( __( 'Show the comments only on the first page.', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 	}
 	
@@ -293,7 +327,7 @@ class Multipage_Plugin_Main_Settings {
 		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
 		checked( $existing_value );
 		echo ' /> ';
-		echo esc_html( __( 'Show the table of contents only on the first page of the post.', 'sgr-npt' ) );
+		echo esc_html( __( 'Show the table of contents only on the first page of the post.', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 	}
 	
@@ -337,9 +371,9 @@ class Multipage_Plugin_Main_Settings {
 	 */
 	public static function page_labels_descriptions() {
 		return array(
-			'numbers' => __( 'Display numbers before the subpage title.', 'sgr-npt' ),
-			'pages' => __( 'Display "Page #" before the subpage title.', 'sgr-npt' ),
-			'hidden' => __( 'Hide subpage labels, display only the title.', 'sgr-npt' ),
+			'numbers' => __( 'Display numbers before the subpage title.', 'sgr-nextpage-titles' ),
+			'pages' => __( 'Display "Page #" before the subpage title.', 'sgr-nextpage-titles' ),
+			'hidden' => __( 'Hide subpage labels, display only the title.', 'sgr-nextpage-titles' ),
 		);
 	}
 	
@@ -416,7 +450,7 @@ class Multipage_Plugin_Main_Settings {
 		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
 		checked( $existing_value );
 		echo ' /> ';
-		echo esc_html( __( 'Hide the table of contents header.', 'sgr-npt' ) );
+		echo esc_html( __( 'Hide the table of contents header.', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 	}
 	
@@ -438,7 +472,7 @@ class Multipage_Plugin_Main_Settings {
 		echo '<label><input type="checkbox" name="' . self::OPTION_NAME . '[' . $key . ']" id="' . $key . '" value="1"';
 		checked( $existing_value );
 		echo ' /> ';
-		echo esc_html( __( 'Add a link for comments (only if comments are enabled).', 'sgr-npt' ) );
+		echo esc_html( __( 'Add a link for comments (only if comments are enabled).', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 	}
 	
@@ -516,9 +550,9 @@ class Multipage_Plugin_Main_Settings {
 			$existing_value = 'bottom';
 
 		$descriptions = array(
-			'bottom' => __( 'after the content', 'sgr-npt' ),
-			'top' => __( 'before the content', 'sgr-npt' ),
-			'hidden' => __( 'hidden', 'sgr-npt' )
+			'bottom' => __( 'after the content', 'sgr-nextpage-titles' ),
+			'top' => __( 'before the content', 'sgr-nextpage-titles' ),
+			'hidden' => __( 'hidden', 'sgr-nextpage-titles' )
 		);
 
 		$options = '';
