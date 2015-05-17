@@ -145,23 +145,23 @@ class Multipage_Plugin_Main_Settings {
 			$this->hook_suffix
 		);
 		
-		add_settings_field(
+		/* add_settings_field(
 			'intro-oep',
 			__( 'Intro', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_intro_oofp' ),
 			$this->hook_suffix,
 			'multipage',
 			array( 'label_for' => 'intro-oep' )
-		);
+		); */
 		
-		add_settings_field(
+		/* add_settings_field(
 			'force-rewrite-titles',
 			__( 'Force rewrite titles', 'sgr-nextpage-titles' ),
 			array( &$this, 'display_force_rewrite_titles' ),
 			$this->hook_suffix,
 			'multipage',
 			array( 'label_for' => 'force-rewrite-titles' )
-		);
+		); */
 
 		add_settings_field(
 			'comments-oofp',
@@ -244,7 +244,7 @@ class Multipage_Plugin_Main_Settings {
 	 *
 	 * @return void
 	 */
-	public function display_intro_oofp() {
+	/* public function display_intro_oofp() {
 		$key = 'intro-oep';
 		
 		if ( isset( $this->existing_options[$key] ) && $this->existing_options[$key] )
@@ -260,7 +260,7 @@ class Multipage_Plugin_Main_Settings {
 		echo '<p class="description">';
 		echo esc_html( __( 'If unchecked, the intro will act as a stand-alone page.', 'sgr-nextpage-titles' ) );
 		echo '</p>';
-	}
+	} */
 
 	/**
 	 * Display a checkbox to force revrite titles (increase priority).
@@ -269,7 +269,7 @@ class Multipage_Plugin_Main_Settings {
 	 *
 	 * @return void
 	 */
-	public function display_force_rewrite_titles() {
+	/* public function display_force_rewrite_titles() {
 		$key = 'force-rewrite-titles';
 		
 		if ( isset( $this->existing_options[$key] ) && $this->existing_options[$key] )
@@ -283,9 +283,9 @@ class Multipage_Plugin_Main_Settings {
 		echo esc_html( __( 'Enable force rewrite titles.', 'sgr-nextpage-titles' ) );
 		echo '</label>';
 		echo '<p class="description">';
-		echo esc_html( __( 'Some plugins needs this enabled in order to correctly show the subpage title instead of "Page # of #". If the title works good please leave this disabled.', 'sgr-nextpage-titles' ) );
+		echo esc_html( __( 'Some plugin needs this enabled in order to correctly show the subpage title instead of "Page # of #". If the title works good please leave this disabled.', 'sgr-nextpage-titles' ) );
 		echo '</p>';
-	}
+	} */
 
 	/**
 	 * Display a checkbox to set if the comments must appear only on the first page of the post.
