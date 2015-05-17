@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, multi-page, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
 Tested up to: 4.2
-Stable tag: 1.2.4
+Stable tag: 1.3
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
 
@@ -45,8 +45,12 @@ Please let us know how much you care about Multipage Plugin development rating i
 == Changelog ==
 
 = 1.3 =
+Release Date: May 17th, 2015
+
 * New Features:
-	* Added the "Subpage" button to the WordPress visual editor.
+	* Added the "Subpage" button to the WordPress visual & HTML editors
+* Enhancements:
+	* Modified the text-domain to reflect the plugin slug "sgr-nextpage-titles"
 	
 = 1.2.4 =
 Release Date: May 4th, 2015
