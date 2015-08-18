@@ -5,7 +5,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: multipage, multi-page, nextpage, subpages, seo, posts, page, index, shortcode
 Requires at least: 3.0
-Tested up to: 4.2
+Tested up to: 4.3
 Stable tag: 1.3
 
 Order your posts in subpages: multipage posts will have a table of contents linking single subpages with their titles.
